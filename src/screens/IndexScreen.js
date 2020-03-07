@@ -42,7 +42,7 @@ const IndexScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => fetchData()} title='Get Newsfeed' />
+      <Button onPress={() => fetchData()} title='Get Newsfeed: OTH-AW' />
       <FlatList
         data={articles}
         renderItem={({ item }) => {
