@@ -4,10 +4,11 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import FeedOverview from '../components/FeedOverview';
+import { registerForPushNotificationsAsync } from '../service/pushNotification';
 
 const IndexScreen = () => {
   const [articles, setarticles] = useState([]);
-
+  registerForPushNotificationsAsync();
   const fetchData = async () => {
     const response = await axios.get(
       'https://www.oth-aw.de/rss-schwarzesbrett.xml'
