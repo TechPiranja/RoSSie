@@ -24,15 +24,7 @@ const IndexScreen = () => {
 						title: element.title[0],
 						time: element.pubDate,
 						link: element.link,
-						description: element.description[0]
-							.replace(/<\/p>/g, "")
-							.replace(/<p>/g, "")
-							.replace(/&uuml;/g, "ü")
-							.replace(/&ouml;/g, "ö")
-							.replace(/&auml;/g, "ä")
-							.replace(/&quot;/g, '"')
-							.replace(/<a href="mailto:/g, "")
-							.replace(/".*<\/a>/, ""),
+						description: element.description[0],
 					},
 				]);
 			});
