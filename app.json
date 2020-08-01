@@ -3,7 +3,6 @@
     "name": "RoSSie",
     "slug": "RoSSie",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
       "android",
@@ -24,7 +23,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.techpiranja.RoSSie"
     }
   }
 }
