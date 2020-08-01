@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import FeedDetail from "../components/FeedDetail";
 
 const FeedDetailScreen = ({ navigation }) => {
@@ -13,10 +13,8 @@ const FeedDetailScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
 	description: {
-		borderRadius: 5,
-		backgroundColor: "#FFFFFF",
+		backgroundColor: "#FFF",
 		padding: 10,
-		margin: 10,
 	},
 	time: {
 		color: "gray",

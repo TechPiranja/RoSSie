@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { View, Text, StyleSheet } from "react-native";
+import { ScrollView, RefreshControl, StyleSheet } from "react-native";
 import { Button } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 
 const IndexScreen = () => {
 	const [articles, setarticles] = useState([]);
+	const [refreshing, setRefreshing] = useState(false);
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		fetchData().then(() => {
+			setRefreshing(false);
+		});
+	});
+
 	//registerForPushNotificationsAsync();
 	const fetchData = async () => {
 		const response = await axios.get("https://www.oth-aw.de/rss-schwarzesbrett.xml");
@@ -32,8 +41,11 @@ const IndexScreen = () => {
 	};
 
 	return (
-		<View style={styles.container}>
-			<Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />
+		<ScrollView
+			style={styles.container}
+			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
+		>
+			{articles[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />}
 			<FlatList
 				data={articles}
 				renderItem={({ item }) => {
@@ -41,13 +53,13 @@ const IndexScreen = () => {
 				}}
 				keyExtractor={(item, index) => index.toString()}
 			/>
-		</View>
+		</ScrollView>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 10,
+		backgroundColor: "#fff",
 	},
 });
 
