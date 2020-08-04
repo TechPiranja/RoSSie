@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ScrollView, RefreshControl, StyleSheet, Button, AsyncStorage } from "react-native";
+import { ScrollView, View, RefreshControl, StyleSheet, Button, AsyncStorage } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
@@ -23,7 +23,10 @@ const IndexScreen = () => {
 	const load = async () => {
 		let jsonValue = await AsyncStorage.getItem("Feed");
 		jsonValue = JSON.parse(jsonValue);
-		loadXmlToFeed(jsonValue);
+		if (jsonValue == null) return;
+		jsonValue.forEach((element) => {
+			if (!feed.some((e) => e.title === obj.title)) setFeed((oldArray) => [...oldArray, element]);
+		});
 	};
 
 	const save = async (value) => {
@@ -36,34 +39,40 @@ const IndexScreen = () => {
 	};
 
 	const loadXmlToFeed = async (value) => {
+		let tempArr = [];
+
 		var parseString = require("react-native-xml2js").parseString;
 		parseString(value.data, function (err, result) {
 			var obj = JSON.stringify(result);
 			var data = JSON.parse(obj);
 
 			data.rss.channel[0].item.forEach((element) => {
-				setFeed((oldArray) => [
-					...oldArray,
-					{
-						title: element.title[0],
-						time: element.pubDate,
-						link: element.link,
-						description: element.description[0],
-					},
-				]);
+				let obj = {
+					title: element.title[0],
+					time: element.pubDate,
+					link: element.link,
+					description: element.description[0],
+				};
+
+				if (!feed.some((e) => e.title === obj.title) && !tempArr.some((e) => e.title === obj.title))
+					tempArr.push(obj);
 			});
 		});
+
+		setFeed((oldArray) => [...tempArr, ...oldArray]);
+
+		console.log("reloaded");
 	};
 
 	//registerForPushNotificationsAsync();
 	const fetchData = async () => {
 		const response = await axios.get("https://www.oth-aw.de/rss-schwarzesbrett.xml");
 		loadXmlToFeed(response);
-		save(response);
+		save(feed);
 	};
 
 	return (
-		<ScrollView
+		<View
 			style={styles.container}
 			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
 		>
@@ -75,7 +84,7 @@ const IndexScreen = () => {
 				}}
 				keyExtractor={(item, index) => index.toString()}
 			/>
-		</ScrollView>
+		</View>
 	);
 };
 

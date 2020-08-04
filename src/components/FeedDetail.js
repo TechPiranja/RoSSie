@@ -6,20 +6,18 @@ import HTML from "react-native-render-html";
 
 const FeedDetail = ({ result }) => {
 	return (
-		<ScrollView>
-			<View style={styles.container}>
-				<Text style={styles.title}>{result.title}</Text>
-				<HTML
-					html={result.description}
-					imagesMaxWidth={Dimensions.get("window").width}
-					onLinkPress={(event, url) => Linking.openURL(url)}
-				/>
-				<View style={styles.bottomContainer}>
-					<Text style={styles.time}>Time: {result.time} </Text>
-					<TouchableOpacity onPress={() => Linking.openURL(result.link.toString())}>
-						<Feather name="external-link" style={styles.iconStyle} />
-					</TouchableOpacity>
-				</View>
+		<ScrollView style={styles.container}>
+			<Text style={styles.title}>{result.title}</Text>
+			<HTML
+				html={result.description}
+				imagesMaxWidth={Dimensions.get("window").width}
+				onLinkPress={(event, url) => Linking.openURL(url)}
+			/>
+			<View style={styles.bottomContainer}>
+				<Text style={styles.time}>Time: {result.time} </Text>
+				<TouchableOpacity onPress={() => Linking.openURL(result.link.toString())}>
+					<Feather name="external-link" style={styles.iconStyle} />
+				</TouchableOpacity>
 			</View>
 		</ScrollView>
 	);
