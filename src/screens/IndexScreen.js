@@ -66,13 +66,15 @@ const IndexScreen = () => {
 
 	//registerForPushNotificationsAsync();
 	const fetchData = async () => {
-		const response = await axios.get("https://www.oth-aw.de/rss-schwarzesbrett.xml");
+		//https://www.fitness-fokus.de/feed/
+		//https://www.oth-aw.de/rss-schwarzesbrett.xml
+		const response = await axios.get("https://www.fitness-fokus.de/feed/");
 		loadXmlToFeed(response);
 		save(feed);
 	};
 
 	return (
-		<View
+		<ScrollView
 			style={styles.container}
 			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
 		>
@@ -84,7 +86,7 @@ const IndexScreen = () => {
 				}}
 				keyExtractor={(item, index) => index.toString()}
 			/>
-		</View>
+		</ScrollView>
 	);
 };
 
