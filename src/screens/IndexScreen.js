@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ScrollView, View, RefreshControl, StyleSheet, Button, AsyncStorage } from "react-native";
+import { RefreshControl, StyleSheet, Button, AsyncStorage } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 
-const IndexScreen = () => {
+const IndexScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -80,7 +80,7 @@ const IndexScreen = () => {
 			ListHeaderComponent={feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />}
 			data={feed}
 			renderItem={({ item }) => {
-				return <FeedOverview result={item} />;
+				return <FeedOverview result={item} navigation={navigation} />;
 			}}
 			keyExtractor={(item, index) => index.toString()}
 		/>

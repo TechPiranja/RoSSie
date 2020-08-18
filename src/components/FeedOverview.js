@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { withNavigation } from "react-navigation";
 
 const FeedOverview = ({ result, navigation }) => {
 	return (
@@ -25,4 +24,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default withNavigation(FeedOverview);
+export default FeedOverview;
