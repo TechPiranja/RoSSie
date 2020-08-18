@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { RefreshControl, StyleSheet, Button, AsyncStorage } from "react-native";
+import { RefreshControl, StyleSheet, Button, AsyncStorage, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
+import BottomNavBar from "../components/BottomNavBar";
 
 const IndexScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
@@ -74,22 +75,28 @@ const IndexScreen = ({ navigation }) => {
 	};
 
 	return (
-		<FlatList
-			style={styles.container}
-			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
-			ListHeaderComponent={feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />}
-			data={feed}
-			renderItem={({ item }) => {
-				return <FeedOverview result={item} navigation={navigation} />;
-			}}
-			keyExtractor={(item, index) => index.toString()}
-		/>
+		<View style={styles.container}>
+			<FlatList
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
+				ListHeaderComponent={
+					feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />
+				}
+				data={feed}
+				renderItem={({ item }) => {
+					return <FeedOverview result={item} navigation={navigation} />;
+				}}
+				keyExtractor={(item, index) => index.toString()}
+			/>
+			<BottomNavBar index={1} navigation={navigation} />
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "#fff",
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
 	},
 });
 
