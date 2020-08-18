@@ -23,7 +23,7 @@ const IndexScreen = () => {
 	const load = async () => {
 		let jsonValue = await AsyncStorage.getItem("Feed");
 		jsonValue = JSON.parse(jsonValue);
-		if (jsonValue == null) return;
+		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
 			if (!feed.some((e) => e.title === obj.title)) setFeed((oldArray) => [...oldArray, element]);
 		});
@@ -74,19 +74,16 @@ const IndexScreen = () => {
 	};
 
 	return (
-		<ScrollView
+		<FlatList
 			style={styles.container}
 			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
-		>
-			{feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />}
-			<FlatList
-				data={feed}
-				renderItem={({ item }) => {
-					return <FeedOverview result={item} />;
-				}}
-				keyExtractor={(item, index) => index.toString()}
-			/>
-		</ScrollView>
+			ListHeaderComponent={feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />}
+			data={feed}
+			renderItem={({ item }) => {
+				return <FeedOverview result={item} />;
+			}}
+			keyExtractor={(item, index) => index.toString()}
+		/>
 	);
 };
 
