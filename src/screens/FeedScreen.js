@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ScrollView, View, RefreshControl, StyleSheet, Button, AsyncStorage } from "react-native";
+import { RefreshControl, StyleSheet, Button, AsyncStorage, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
+import BottomNavBar from "../components/BottomNavBar";
+import FeedFetcher from "../service/FeedFetcher";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
-const IndexScreen = () => {
+const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
+	const isFocused = useIsFocused();
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
@@ -18,32 +22,35 @@ const IndexScreen = () => {
 
 	useEffect(() => {
 		load();
-	}, []);
+		fetchData();
+		console.log("used Effect!");
+	}, [isFocused]);
 
 	const load = async () => {
 		let jsonValue = await AsyncStorage.getItem("Feed");
 		jsonValue = JSON.parse(jsonValue);
-		if (jsonValue == null) return;
+		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
-			if (!feed.some((e) => e.title === obj.title)) setFeed((oldArray) => [...oldArray, element]);
+			if (!feed.some((e) => e.title === element.title)) setFeed((oldArray) => [...oldArray, element]);
 		});
 	};
 
-	const save = async (value) => {
-		try {
-			let jsonValue = JSON.stringify(value);
-			await AsyncStorage.setItem("Feed", jsonValue);
-		} catch (e) {
-			console.log("Error: " + e);
-		}
+	const fetchData = async () => {
+		let data = await FeedFetcher.fetchData();
+		loadXmlToFeed(data);
+		FeedFetcher.save("Feed", feed);
 	};
 
 	const loadXmlToFeed = async (value) => {
 		let tempArr = [];
-
 		var parseString = require("react-native-xml2js").parseString;
 		parseString(value.data, function (err, result) {
 			var obj = JSON.stringify(result);
+
+			if (obj == undefined) {
+				console.log("data was undefined!");
+				return;
+			}
 			var data = JSON.parse(obj);
 
 			data.rss.channel[0].item.forEach((element) => {
@@ -65,35 +72,31 @@ const IndexScreen = () => {
 	};
 
 	//registerForPushNotificationsAsync();
-	const fetchData = async () => {
-		//https://www.fitness-fokus.de/feed/
-		//https://www.oth-aw.de/rss-schwarzesbrett.xml
-		const response = await axios.get("https://www.fitness-fokus.de/feed/");
-		loadXmlToFeed(response);
-		save(feed);
-	};
 
 	return (
-		<ScrollView
-			style={styles.container}
-			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
-		>
-			{feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />}
+		<View style={styles.container}>
 			<FlatList
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
+				ListHeaderComponent={
+					feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />
+				}
 				data={feed}
 				renderItem={({ item }) => {
-					return <FeedOverview result={item} />;
+					return <FeedOverview result={item} navigation={navigation} />;
 				}}
 				keyExtractor={(item, index) => index.toString()}
 			/>
-		</ScrollView>
+			<BottomNavBar index={1} navigation={navigation} />
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "#fff",
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
 	},
 });
 
-export default IndexScreen;
+export default FeedScreen;

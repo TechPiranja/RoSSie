@@ -2,8 +2,8 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import FeedDetail from "../components/FeedDetail";
 
-const FeedDetailScreen = ({ navigation }) => {
-	const result = navigation.getParam("result");
+const FeedDetailScreen = ({ route }) => {
+	const { result } = route.params;
 	return (
 		<View style={styles.description}>
 			<FeedDetail result={result} />
