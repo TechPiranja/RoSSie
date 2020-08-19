@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, AsyncStorage, Button } from "react-native";
 import BottomNavBar from "../components/BottomNavBar";
 import { FlatList, TextInput } from "react-native-gesture-handler";
+import FeedFetcher from "../service/FeedFetcher";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
@@ -33,7 +34,6 @@ const FeedListScreen = ({ navigation }) => {
 		}
 	};
 
-
 	//https://www.fitness-fokus.de/feed/
 	return (
 		<View style={styles.description}>
@@ -47,7 +47,7 @@ const FeedListScreen = ({ navigation }) => {
 			<FlatList
 				data={feedList}
 				renderItem={({ item }) => {
-					return <Button title={item} onPress={() => changeFeedLink(item)} />;
+					return <Button title={item} onPress={() => FeedFetcher.changeFeedLink(item)} />;
 				}}
 				keyExtractor={(item, index) => index.toString()}
 			/>

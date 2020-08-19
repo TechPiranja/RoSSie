@@ -6,10 +6,12 @@ import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 import BottomNavBar from "../components/BottomNavBar";
 import FeedFetcher from "../service/FeedFetcher";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
-const IndexScreen = ({ navigation }) => {
+const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
+	const isFocused = useIsFocused();
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
@@ -20,7 +22,9 @@ const IndexScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		load();
-	}, []);
+		fetchData();
+		console.log("used Effect!");
+	}, [isFocused]);
 
 	const load = async () => {
 		let jsonValue = await AsyncStorage.getItem("Feed");
@@ -39,7 +43,6 @@ const IndexScreen = ({ navigation }) => {
 
 	const loadXmlToFeed = async (value) => {
 		let tempArr = [];
-		console.log("value: " + value);
 		var parseString = require("react-native-xml2js").parseString;
 		parseString(value.data, function (err, result) {
 			var obj = JSON.stringify(result);
@@ -96,4 +99,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default IndexScreen;
+export default FeedScreen;
