@@ -31,7 +31,7 @@ const FeedScreen = ({ navigation }) => {
 		jsonValue = JSON.parse(jsonValue);
 		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
-			if (!feed.some((e) => e.title === obj.title)) setFeed((oldArray) => [...oldArray, element]);
+			if (!feed.some((e) => e.title === element.title)) setFeed((oldArray) => [...oldArray, element]);
 		});
 	};
 
