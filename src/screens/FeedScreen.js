@@ -5,6 +5,7 @@ import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 import BottomNavBar from "../components/BottomNavBar";
+import FeedFetcher from "../service/FeedFetcher";
 
 const IndexScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
@@ -30,21 +31,23 @@ const IndexScreen = ({ navigation }) => {
 		});
 	};
 
-	const save = async (value) => {
-		try {
-			let jsonValue = JSON.stringify(value);
-			await AsyncStorage.setItem("Feed", jsonValue);
-		} catch (e) {
-			console.log("Error: " + e);
-		}
+	const fetchData = async () => {
+		let data = await FeedFetcher.fetchData();
+		loadXmlToFeed(data);
+		FeedFetcher.save("Feed", feed);
 	};
 
 	const loadXmlToFeed = async (value) => {
 		let tempArr = [];
-
+		console.log("value: " + value);
 		var parseString = require("react-native-xml2js").parseString;
 		parseString(value.data, function (err, result) {
 			var obj = JSON.stringify(result);
+
+			if (obj == undefined) {
+				console.log("data was undefined!");
+				return;
+			}
 			var data = JSON.parse(obj);
 
 			data.rss.channel[0].item.forEach((element) => {
@@ -66,13 +69,6 @@ const IndexScreen = ({ navigation }) => {
 	};
 
 	//registerForPushNotificationsAsync();
-	const fetchData = async () => {
-		//https://www.fitness-fokus.de/feed/
-		//https://www.oth-aw.de/rss-schwarzesbrett.xml
-		const response = await axios.get("https://www.fitness-fokus.de/feed/");
-		loadXmlToFeed(response);
-		save(feed);
-	};
 
 	return (
 		<View style={styles.container}>
