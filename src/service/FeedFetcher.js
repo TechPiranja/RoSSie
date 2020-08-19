@@ -3,17 +3,12 @@ import { AsyncStorage } from "react-native";
 
 class FeedFetcher {
 	constructor() {
-		this.init();
+		this.currentFeedLink = "https://www.oth-aw.de/rss-schwarzesbrett.xml";
 	}
 
-	init = () => {
-		// TODO: load last FeedLink
-	};
-
+	//https://www.fitness-fokus.de/feed/
 	fetchData = async () => {
-		//https://www.fitness-fokus.de/feed/
-		//https://www.oth-aw.de/rss-schwarzesbrett.xml
-		const response = await axios.get("https://www.fitness-fokus.de/feed/");
+		const response = await axios.get(this.currentFeedLink);
 		console.log("fetched data" + response);
 		return response;
 	};
@@ -27,7 +22,9 @@ class FeedFetcher {
 		}
 	};
 
-	changeFeedLink = async (value) => {};
+	changeFeedLink = async (value) => {
+		this.currentFeedLink = value;
+	};
 }
 
 export default new FeedFetcher();
