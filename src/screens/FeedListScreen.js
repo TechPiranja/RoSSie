@@ -6,7 +6,7 @@ import FeedFetcher from "../service/FeedFetcher";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
-	const [newFeedLink, onChangeText] = React.useState("");
+	const [newFeedLink, onChangeText] = useState("");
 
 	useEffect(() => {
 		loadFeedListFromStorage();
@@ -15,23 +15,28 @@ const FeedListScreen = ({ navigation }) => {
 
 	const loadFeedListFromStorage = async () => {
 		let jsonValue = await AsyncStorage.getItem("FeedList");
-		console.log("load: " + jsonValue);
 		jsonValue = JSON.parse(jsonValue);
 		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
 			setFeedList((oldArray) => [...oldArray, element]);
+			console.log(element);
 		});
 	};
 
 	const save = async (value) => {
-		setFeedList((oldArray) => [...oldArray, value]);
 		try {
-			let jsonValue = JSON.stringify(feedList);
+			let jsonValue = JSON.stringify([...feedList, value]);
 			await AsyncStorage.setItem("FeedList", jsonValue);
 			console.log("Trying to save: " + jsonValue);
 		} catch (e) {
 			console.log("Error: " + e);
 		}
+		setFeedList((oldArray) => [...oldArray, value]);
+	};
+
+	const deleteAllLinks = async () => {
+		setFeedList((oldArray) => []);
+		await AsyncStorage.setItem("FeedList", "");
 	};
 
 	//https://www.fitness-fokus.de/feed/
@@ -44,6 +49,7 @@ const FeedListScreen = ({ navigation }) => {
 				value={newFeedLink}
 			/>
 			<Button title="Add Feed" onPress={() => save(newFeedLink)} />
+			<Button title="Delete all Links" onPress={() => deleteAllLinks()} />
 			<FlatList
 				data={feedList}
 				renderItem={({ item }) => {
