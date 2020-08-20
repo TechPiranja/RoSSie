@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { RefreshControl, StyleSheet, Button, AsyncStorage, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 import BottomNavBar from "../components/BottomNavBar";
 import FeedFetcher from "../service/FeedFetcher";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 	const isFocused = useIsFocused();
+
+	useEffect(() => {
+		load();
+		console.log("inital load");
+	}, []);
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
@@ -21,13 +25,23 @@ const FeedScreen = ({ navigation }) => {
 	});
 
 	useEffect(() => {
-		load();
+		setFeed((oldArray) => []);
 		fetchData();
 		console.log("used Effect!");
 	}, [isFocused]);
 
+	const clearAppData = async function () {
+		try {
+			const keys = await AsyncStorage.getAllKeys();
+			await AsyncStorage.multiRemove(keys);
+		} catch (error) {
+			console.error("Error clearing app data.");
+		}
+	};
+
 	const load = async () => {
-		let jsonValue = await AsyncStorage.getItem("Feed");
+		let jsonValue = await AsyncStorage.getItem("FeedData" + FeedFetcher.currentFeedLink);
+		console.log("is feed empty? : " + feed);
 		jsonValue = JSON.parse(jsonValue);
 		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
@@ -38,7 +52,7 @@ const FeedScreen = ({ navigation }) => {
 	const fetchData = async () => {
 		let data = await FeedFetcher.fetchData();
 		loadXmlToFeed(data);
-		FeedFetcher.save("Feed", feed);
+		FeedFetcher.save("FeedData" + FeedFetcher.currentFeedLink, feed);
 	};
 
 	const loadXmlToFeed = async (value) => {
@@ -61,7 +75,7 @@ const FeedScreen = ({ navigation }) => {
 					description: element.description[0],
 				};
 
-				if (!feed.some((e) => e.title === obj.title) && !tempArr.some((e) => e.title === obj.title))
+				if (!feed.some((e) => e.title == obj.title) && !tempArr.some((e) => e.title == obj.title))
 					tempArr.push(obj);
 			});
 		});
@@ -75,6 +89,7 @@ const FeedScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
+			<Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 			<FlatList
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
 				ListHeaderComponent={

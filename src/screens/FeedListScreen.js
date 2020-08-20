@@ -35,7 +35,7 @@ const FeedListScreen = ({ navigation }) => {
 	};
 
 	const deleteAllLinks = async () => {
-		setFeedList((oldArray) => []);
+		setFeedList(() => []);
 		await AsyncStorage.setItem("FeedList", "");
 	};
 
