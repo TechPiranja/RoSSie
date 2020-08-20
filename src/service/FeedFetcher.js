@@ -25,6 +25,15 @@ class FeedFetcher {
 	changeFeedLink = async (value) => {
 		this.currentFeedLink = value;
 	};
+
+	clearAppData = async function () {
+		try {
+			const keys = await AsyncStorage.getAllKeys();
+			await AsyncStorage.multiRemove(keys);
+		} catch (error) {
+			console.error("Error clearing app data.");
+		}
+	};
 }
 
 export default new FeedFetcher();

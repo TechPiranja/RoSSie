@@ -39,43 +39,78 @@ const FeedListScreen = ({ navigation }) => {
 		await AsyncStorage.setItem("FeedList", "");
 	};
 
+	const clearAppData = async () => {
+		FeedFetcher.clearAppData;
+		setFeedList(() => []);
+	};
+
 	//https://www.fitness-fokus.de/feed/
 	return (
 		<View style={styles.description}>
-			<TextInput
-				style={styles.textInput}
-				placeholder="https://www.FeedLink.xml"
-				onChangeText={(text) => onChangeText(text)}
-				value={newFeedLink}
-			/>
-			<Button title="Add Feed" onPress={() => save(newFeedLink)} />
-			<Button title="Delete all Links" onPress={() => deleteAllLinks()} />
-			<FlatList
-				data={feedList}
-				renderItem={({ item }) => {
-					return <Button title={item} onPress={() => FeedFetcher.changeFeedLink(item)} />;
-				}}
-				keyExtractor={(item, index) => index.toString()}
-			/>
-			<BottomNavBar index={0} navigation={navigation} />
+			<View style={styles.test}>
+				<View style={styles.rowContainer}>
+					<TextInput
+						style={styles.textInput}
+						placeholder="https://www.FeedLink.xml"
+						onChangeText={(text) => onChangeText(text)}
+						value={newFeedLink}
+					/>
+					<Button title="Add Feed" onPress={() => save(newFeedLink)} />
+				</View>
+				<View>
+					<FlatList
+						style={styles.feedList}
+						data={feedList}
+						renderItem={({ item }) => {
+							return <Button title={item} onPress={() => FeedFetcher.changeFeedLink(item)} />;
+						}}
+						keyExtractor={(item, index) => index.toString()}
+					/>
+					<Button title="Delete all Links" onPress={deleteAllLinks} />
+					<Button title="Clear Offline Storage" onPress={clearAppData} />
+				</View>
+			</View>
+
+			<BottomNavBar index={0} navigation={navigation} style={styles.bottomNav} />
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
+	feedList: {
+		backgroundColor: "#fff",
+		marginHorizontal: 10,
+		borderRadius: 10,
+		height: "80%",
+	},
 	description: {
 		flex: 1,
 		flexDirection: "column",
 		justifyContent: "space-between",
 	},
+	test: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
+	},
+	rowContainer: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		margin: 10,
+	},
 	textInput: {
-		height: 40,
-		borderColor: "gray",
+		height: 30,
+		borderColor: "transparent",
 		borderWidth: 1,
-		margin: 5,
-		borderRadius: 5,
+		borderRadius: 10,
 		padding: 5,
 		textAlign: "center",
+		width: "70%",
+		backgroundColor: "#fff",
+	},
+	buttons: {
+		backgroundColor: "#fff",
 	},
 });
 
