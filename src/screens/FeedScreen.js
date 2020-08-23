@@ -14,7 +14,6 @@ const FeedScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		load();
-		console.log("inital load");
 	}, []);
 
 	const onRefresh = React.useCallback(() => {
@@ -31,19 +30,23 @@ const FeedScreen = ({ navigation }) => {
 	}, [isFocused]);
 
 	const load = async () => {
-		let jsonValue = await AsyncStorage.getItem("FeedData" + FeedFetcher.currentFeedLink);
+		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+		console.log("awaited feed link: " + currentFeedLink);
+		let jsonValue = await AsyncStorage.getItem("FeedData" + currentFeedLink);
 		console.log("is feed empty? : " + feed);
 		jsonValue = JSON.parse(jsonValue);
 		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
 			if (!feed.some((e) => e.title === element.title)) setFeed((oldArray) => [...oldArray, element]);
 		});
+		console.log("loaded");
 	};
 
 	const fetchData = async () => {
 		let data = await FeedFetcher.fetchData();
 		loadXmlToFeed(data);
-		FeedFetcher.save("FeedData" + FeedFetcher.currentFeedLink, feed);
+		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+		FeedFetcher.save("FeedData" + currentFeedLink, feed);
 	};
 
 	const loadXmlToFeed = async (value) => {
