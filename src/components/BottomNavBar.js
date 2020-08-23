@@ -1,6 +1,6 @@
 import React from "react";
 import { BottomNavigation, BottomNavigationTab, Icon } from "@ui-kitten/components";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 const PinPoint = (props) => <Icon {...props} name="pin-outline" />;
 const Home = (props) => <Icon {...props} name="home-outline" />;
@@ -9,7 +9,6 @@ const BottomNavBar = ({ navigation, index }) => {
 	return (
 		<View>
 			<BottomNavigation
-				style={Platform.OS === "ios" && { height: 80 }}
 				selectedIndex={index}
 				appearance="noIndicator"
 				selectedIndex={index}
@@ -21,5 +20,7 @@ const BottomNavBar = ({ navigation, index }) => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({});
 
 export default BottomNavBar;

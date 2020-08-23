@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { RefreshControl, StyleSheet, Button, AsyncStorage, View } from "react-native";
+import { RefreshControl, StyleSheet, Button, AsyncStorage, View, SafeAreaView } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 import BottomNavBar from "../components/BottomNavBar";
 import FeedFetcher from "../service/FeedFetcher";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { TopNavigation, Layout } from "@ui-kitten/components";
 
 const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 	const isFocused = useIsFocused();
+
+	useEffect(() => {
+		load();
+	}, []);
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
@@ -21,24 +25,30 @@ const FeedScreen = ({ navigation }) => {
 	});
 
 	useEffect(() => {
-		load();
+		setFeed((oldArray) => []);
 		fetchData();
 		console.log("used Effect!");
 	}, [isFocused]);
 
 	const load = async () => {
-		let jsonValue = await AsyncStorage.getItem("Feed");
+		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+		setCurrentFeedFromLink(currentFeedLink);
+		console.log("awaited feed link: " + currentFeedLink);
+		let jsonValue = await AsyncStorage.getItem("FeedData" + currentFeedLink);
+		console.log("is feed empty? : " + feed);
 		jsonValue = JSON.parse(jsonValue);
 		if (jsonValue == null || jsonValue.length == 0) return;
 		jsonValue.forEach((element) => {
 			if (!feed.some((e) => e.title === element.title)) setFeed((oldArray) => [...oldArray, element]);
 		});
+		console.log("loaded");
 	};
 
 	const fetchData = async () => {
 		let data = await FeedFetcher.fetchData();
 		loadXmlToFeed(data);
-		FeedFetcher.save("Feed", feed);
+		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+		FeedFetcher.save("FeedData" + currentFeedLink, feed);
 	};
 
 	const loadXmlToFeed = async (value) => {
@@ -61,7 +71,7 @@ const FeedScreen = ({ navigation }) => {
 					description: element.description[0],
 				};
 
-				if (!feed.some((e) => e.title === obj.title) && !tempArr.some((e) => e.title === obj.title))
+				if (!feed.some((e) => e.title == obj.title) && !tempArr.some((e) => e.title == obj.title))
 					tempArr.push(obj);
 			});
 		});
@@ -71,23 +81,23 @@ const FeedScreen = ({ navigation }) => {
 		console.log("reloaded");
 	};
 
-	//registerForPushNotificationsAsync();
+	//registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
 	return (
-		<View style={styles.container}>
-			<FlatList
-				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
-				ListHeaderComponent={
-					feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />
-				}
-				data={feed}
-				renderItem={({ item }) => {
-					return <FeedOverview result={item} navigation={navigation} />;
-				}}
-				keyExtractor={(item, index) => index.toString()}
-			/>
-			<BottomNavBar index={1} navigation={navigation} />
-		</View>
+		<Layout style={{ flex: 1 }}>
+			<SafeAreaView style={styles.container}>
+				<TopNavigation title="Feed" alignment="center" />
+				<FlatList
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
+					data={feed}
+					renderItem={({ item }) => {
+						return <FeedOverview result={item} navigation={navigation} />;
+					}}
+					keyExtractor={(item, index) => index.toString()}
+				/>
+				<BottomNavBar index={1} navigation={navigation} />
+			</SafeAreaView>
+		</Layout>
 	);
 };
 

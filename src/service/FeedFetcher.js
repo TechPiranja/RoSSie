@@ -2,14 +2,14 @@ import axios from "axios";
 import { AsyncStorage } from "react-native";
 
 class FeedFetcher {
-	constructor() {
-		this.currentFeedLink = "https://www.oth-aw.de/rss-schwarzesbrett.xml";
-	}
+	getCurrentFeedLink = async () => {
+		let currentFeedLink = await AsyncStorage.getItem("CurrentFeedLink");
+		return JSON.parse(currentFeedLink);
+	};
 
-	//https://www.fitness-fokus.de/feed/
 	fetchData = async () => {
-		const response = await axios.get(this.currentFeedLink);
-		console.log("fetched data" + response);
+		let currentFeedLink = await this.getCurrentFeedLink();
+		const response = await axios.get(currentFeedLink).catch((error) => console.log(error));
 		return response;
 	};
 
@@ -23,7 +23,16 @@ class FeedFetcher {
 	};
 
 	changeFeedLink = async (value) => {
-		this.currentFeedLink = value;
+		this.save("CurrentFeedLink", value);
+	};
+
+	clearAppData = async function () {
+		try {
+			const keys = await AsyncStorage.getAllKeys();
+			await AsyncStorage.multiRemove(keys);
+		} catch (error) {
+			console.error("Error clearing app data.");
+		}
 	};
 }
 
