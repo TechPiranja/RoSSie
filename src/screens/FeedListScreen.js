@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, AsyncStorage, Button } from "react-native";
+import { View, StyleSheet, AsyncStorage, SafeAreaView } from "react-native";
 import BottomNavBar from "../components/BottomNavBar";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import FeedFetcher from "../service/FeedFetcher";
+import { Button, Card, Modal, Text, TopNavigation, Layout } from "@ui-kitten/components";
+import { auth } from "firebase";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
 	const [newFeedLink, onChangeText] = useState("");
+	const [visible, setVisible] = React.useState(false);
 
 	useEffect(() => {
 		loadFeedListFromStorage();
@@ -32,6 +35,8 @@ const FeedListScreen = ({ navigation }) => {
 			console.log("Error: " + e);
 		}
 		setFeedList((oldArray) => [...oldArray, value]);
+		console.log(value);
+		setVisible(false);
 	};
 
 	const deleteAllLinks = async () => {
@@ -44,35 +49,49 @@ const FeedListScreen = ({ navigation }) => {
 		setFeedList(() => []);
 	};
 
-	//https://www.fitness-fokus.de/feed/
 	return (
-		<View style={styles.description}>
-			<View style={styles.test}>
-				<View style={styles.rowContainer}>
-					<TextInput
-						style={styles.textInput}
-						placeholder="https://www.FeedLink.xml"
-						onChangeText={(text) => onChangeText(text)}
-						value={newFeedLink}
-					/>
-					<Button title="Add Feed" onPress={() => save(newFeedLink)} />
-				</View>
-				<View>
-					<FlatList
-						style={styles.feedList}
-						data={feedList}
-						renderItem={({ item }) => {
-							return <Button title={item} onPress={() => FeedFetcher.changeFeedLink(item)} />;
-						}}
-						keyExtractor={(item, index) => index.toString()}
-					/>
-					<Button title="Delete all Links" onPress={deleteAllLinks} />
-					<Button title="Clear Offline Storage" onPress={clearAppData} />
-				</View>
-			</View>
+		<Layout style={{ flex: 1 }}>
+			<SafeAreaView style={styles.description}>
+				<TopNavigation title="FeedList" alignment="center" />
+				<View style={styles.innerContainer}>
+					<Button style={styles.buttons} onPress={() => setVisible(true)}>
+						Add Feed
+					</Button>
 
-			<BottomNavBar index={0} navigation={navigation} style={styles.bottomNav} />
-		</View>
+					<Modal visible={visible} backdropStyle={styles.backdrop} onBackdropPress={() => setVisible(false)}>
+						<Card disabled={true}>
+							<TextInput
+								style={styles.textInput}
+								placeholder="https://www.FeedLink.xml"
+								onChangeText={(text) => onChangeText(text)}
+								value={newFeedLink}
+							/>
+							<Button style={styles.buttons} onPress={() => save(newFeedLink)}>
+								Add Feed
+							</Button>
+						</Card>
+					</Modal>
+					<View>
+						<FlatList
+							style={styles.feedList}
+							data={feedList}
+							renderItem={({ item }) => {
+								return (
+									<Button appearance="ghost" onPress={() => FeedFetcher.changeFeedLink(item)}>
+										{item}
+									</Button>
+								);
+							}}
+							keyExtractor={(item, index) => index.toString()}
+						/>
+						<Button style={styles.buttons} onPress={clearAppData}>
+							Clear Offline Storage
+						</Button>
+					</View>
+				</View>
+				<BottomNavBar index={0} navigation={navigation} style={styles.bottomNav} />
+			</SafeAreaView>
+		</Layout>
 	);
 };
 
@@ -88,16 +107,11 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		justifyContent: "space-between",
 	},
-	test: {
+	innerContainer: {
 		flex: 1,
 		flexDirection: "column",
 		justifyContent: "space-between",
-	},
-	rowContainer: {
-		flex: 1,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		margin: 10,
+		backgroundColor: "#eee",
 	},
 	textInput: {
 		height: 30,
@@ -110,7 +124,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 	},
 	buttons: {
-		backgroundColor: "#fff",
+		margin: 10,
+		width: "auto",
+	},
+	backdrop: {
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
 	},
 });
 

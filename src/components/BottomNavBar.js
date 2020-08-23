@@ -9,7 +9,6 @@ const BottomNavBar = ({ navigation, index }) => {
 	return (
 		<View>
 			<BottomNavigation
-				style={Platform.OS === "ios" && { height: 80 }}
 				selectedIndex={index}
 				appearance="noIndicator"
 				selectedIndex={index}

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { RefreshControl, StyleSheet, Button, AsyncStorage, View } from "react-native";
+import { RefreshControl, StyleSheet, Button, AsyncStorage, View, SafeAreaView } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 import BottomNavBar from "../components/BottomNavBar";
 import FeedFetcher from "../service/FeedFetcher";
 import { useIsFocused } from "@react-navigation/native";
+import { TopNavigation, Layout } from "@ui-kitten/components";
 
 const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
@@ -31,6 +32,7 @@ const FeedScreen = ({ navigation }) => {
 
 	const load = async () => {
 		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+		setCurrentFeedFromLink(currentFeedLink);
 		console.log("awaited feed link: " + currentFeedLink);
 		let jsonValue = await AsyncStorage.getItem("FeedData" + currentFeedLink);
 		console.log("is feed empty? : " + feed);
@@ -79,24 +81,23 @@ const FeedScreen = ({ navigation }) => {
 		console.log("reloaded");
 	};
 
-	//registerForPushNotificationsAsync();
+	//registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
 	return (
-		<View style={styles.container}>
-			<Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
-			<FlatList
-				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
-				ListHeaderComponent={
-					feed[0] == null && <Button onPress={() => fetchData()} title="Get Newsfeed: OTH-AW" />
-				}
-				data={feed}
-				renderItem={({ item }) => {
-					return <FeedOverview result={item} navigation={navigation} />;
-				}}
-				keyExtractor={(item, index) => index.toString()}
-			/>
-			<BottomNavBar index={1} navigation={navigation} />
-		</View>
+		<Layout style={{ flex: 1 }}>
+			<SafeAreaView style={styles.container}>
+				<TopNavigation title="Feed" alignment="center" />
+				<FlatList
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
+					data={feed}
+					renderItem={({ item }) => {
+						return <FeedOverview result={item} navigation={navigation} />;
+					}}
+					keyExtractor={(item, index) => index.toString()}
+				/>
+				<BottomNavBar index={1} navigation={navigation} />
+			</SafeAreaView>
+		</Layout>
 	);
 };
 

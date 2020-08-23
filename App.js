@@ -6,36 +6,29 @@ import { createStackNavigator } from "@react-navigation/stack";
 import FeedScreen from "./src/screens/FeedScreen";
 import FeedListScreen from "./src/screens/FeedListScreen";
 import FeedDetailScreen from "./src/screens/FeedDetailScreen";
-import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
+import { ApplicationProvider, IconRegistry, Layout } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import { default as theme } from "./custom-theme.json";
 
 const { Navigator, Screen } = createStackNavigator();
 
 const HomeNavigator = () => (
-	<Navigator>
+	<Navigator headerMode="none">
 		<Screen
 			name="Feed"
 			component={FeedScreen}
 			options={{
 				headerLeft: () => null,
 				animationEnabled: false,
-				headerStyle: { backgroundColor: "#00acc1" },
-				headerTintColor: "#fff",
 			}}
 		/>
-		<Screen
-			name="FeedDetail"
-			component={FeedDetailScreen}
-			options={{ headerStyle: { backgroundColor: "#00acc1" }, headerTintColor: "#fff" }}
-		/>
+		<Screen name="FeedDetail" component={FeedDetailScreen} />
 		<Screen
 			name="FeedList"
 			component={FeedListScreen}
 			options={{
 				headerLeft: () => null,
 				animationEnabled: false,
-				headerStyle: { backgroundColor: "#00acc1" },
-				headerTintColor: "#fff",
 			}}
 		/>
 	</Navigator>
@@ -44,9 +37,9 @@ const App = () => {
 	return (
 		<>
 			<IconRegistry icons={EvaIconsPack} />
-			<ApplicationProvider {...eva} theme={eva.light}>
+			<ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
 				<NavigationContainer>
-					<HomeNavigator />
+					<HomeNavigator></HomeNavigator>
 				</NavigationContainer>
 			</ApplicationProvider>
 		</>

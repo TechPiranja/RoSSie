@@ -9,10 +9,7 @@ class FeedFetcher {
 
 	fetchData = async () => {
 		let currentFeedLink = await this.getCurrentFeedLink();
-		console.log("fetch data: " + currentFeedLink);
 		const response = await axios.get(currentFeedLink).catch((error) => console.log(error));
-
-		console.log("fetched data" + response);
 		return response;
 	};
 
