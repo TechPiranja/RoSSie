@@ -58,7 +58,12 @@ const FeedListScreen = ({ navigation }) => {
 						Add Feed
 					</Button>
 
-					<Modal visible={visible} backdropStyle={styles.backdrop} onBackdropPress={() => setVisible(false)}>
+					<Modal
+						width="70%"
+						visible={visible}
+						backdropStyle={styles.backdrop}
+						onBackdropPress={() => setVisible(false)}
+					>
 						<Card disabled={true}>
 							<TextInput
 								style={styles.textInput}
