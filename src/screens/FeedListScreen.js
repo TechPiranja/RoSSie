@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, AsyncStorage, SafeAreaView } from "react-native";
+import { View, StyleSheet, AsyncStorage, SafeAreaView, Animated, TouchableOpacity } from "react-native";
 import BottomNavBar from "../components/BottomNavBar";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import FeedFetcher from "../service/FeedFetcher";
 import { Button, Card, Modal, Text, TopNavigation, Layout } from "@ui-kitten/components";
 import { auth } from "firebase";
+import Validator from "../service/Validation";
+import EmptyPlaceholder from "../components/EmptyPlaceholder";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
@@ -26,7 +29,15 @@ const FeedListScreen = ({ navigation }) => {
 		});
 	};
 
+	const rowTranslateAnimatedValues = {};
+	Array(20)
+		.fill("")
+		.forEach((_, i) => {
+			rowTranslateAnimatedValues[`${i}`] = new Animated.Value(1);
+		});
 	const save = async (value) => {
+		if (!Validator.validURL(value)) return;
+
 		try {
 			let jsonValue = JSON.stringify([...feedList, value]);
 			await AsyncStorage.setItem("FeedList", jsonValue);
@@ -76,19 +87,56 @@ const FeedListScreen = ({ navigation }) => {
 							</Button>
 						</Card>
 					</Modal>
-					<View>
-						<FlatList
-							style={styles.feedList}
-							data={feedList}
-							renderItem={({ item }) => {
-								return (
-									<Button appearance="ghost" onPress={() => FeedFetcher.changeFeedLink(item)}>
-										{item}
-									</Button>
-								);
-							}}
-							keyExtractor={(item, index) => index.toString()}
-						/>
+					<View style={styles.container}>
+						{feedList?.length == 0 ? (
+							<View style={styles.feedList}>
+								<EmptyPlaceholder
+									firstText="Empty feed list"
+									secondText="You can enter a feed link with the button above"
+								/>
+							</View>
+						) : (
+							<SwipeListView
+								disableRightSwipe
+								style={styles.feedList}
+								data={feedList}
+								renderItem={({ item }) => {
+									return (
+										<Button
+											style={styles.btn}
+											appearance="ghost"
+											onPress={() => FeedFetcher.changeFeedLink(item)}
+										>
+											{item}
+										</Button>
+									);
+								}}
+								renderHiddenItem={(data) => (
+									<View style={styles.rowBack}>
+										<View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+											<TouchableOpacity
+												onPress={() => {
+													let indexToDelete = feedList.indexOf(data.item);
+													console.log(indexToDelete);
+													setFeedList(() =>
+														feedList.filter((x, index) => index != indexToDelete)
+													);
+													FeedFetcher.save(
+														"FeedList",
+														feedList.filter((x, index) => index != indexToDelete)
+													);
+												}}
+												style={styles.backTextWhite}
+											>
+												<Text>Delete</Text>
+											</TouchableOpacity>
+										</View>
+									</View>
+								)}
+								rightOpenValue={-75}
+								keyExtractor={(item, index) => index.toString()}
+							/>
+						)}
 						<Button style={styles.buttons} onPress={clearAppData}>
 							Clear Offline Storage
 						</Button>
@@ -101,6 +149,37 @@ const FeedListScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+	btn: {
+		backgroundColor: "white",
+		borderRadius: 0,
+	},
+	container: {
+		backgroundColor: "white",
+		flex: 1,
+	},
+	backTextWhite: {
+		color: "#FFF",
+	},
+	backRightBtn: {
+		alignItems: "center",
+		bottom: 0,
+		justifyContent: "center",
+		position: "absolute",
+		top: 0,
+		width: 75,
+	},
+	backRightBtnRight: {
+		backgroundColor: "red",
+		right: 0,
+	},
+	rowBack: {
+		alignItems: "center",
+		backgroundColor: "red",
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingLeft: 15,
+	},
 	feedList: {
 		backgroundColor: "#fff",
 		marginHorizontal: 10,
