@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AsyncStorage } from "react-native";
+import Validator from "./Validation";
 
 class FeedFetcher {
 	getCurrentFeedLink = async () => {
@@ -9,7 +10,7 @@ class FeedFetcher {
 
 	fetchData = async () => {
 		let currentFeedLink = await this.getCurrentFeedLink();
-		const response = await axios.get(currentFeedLink).catch((error) => console.log(error));
+		const response = await axios.get(currentFeedLink).catch((error) => console.log("FetchData: " + error));
 		return response;
 	};
 
@@ -23,7 +24,7 @@ class FeedFetcher {
 	};
 
 	changeFeedLink = async (value) => {
-		this.save("CurrentFeedLink", value);
+		if (Validator.validURL(value)) this.save("CurrentFeedLink", value);
 	};
 
 	clearAppData = async function () {
