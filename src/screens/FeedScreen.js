@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RefreshControl, StyleSheet, Button, AsyncStorage, View, SafeAreaView } from "react-native";
+import { RefreshControl, StyleSheet, AsyncStorage, SafeAreaView, Text } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
@@ -8,6 +8,7 @@ import FeedFetcher from "../service/FeedFetcher";
 import { useIsFocused } from "@react-navigation/native";
 import { TopNavigation, Layout } from "@ui-kitten/components";
 import Validator from "../service/Validation";
+import EmptyPlaceholder from "../components/EmptyPlaceholder";
 
 const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
@@ -16,6 +17,11 @@ const FeedScreen = ({ navigation }) => {
 	const isFocused = useIsFocused();
 
 	useEffect(() => {
+		async function test() {
+			const keys = await AsyncStorage.getAllKeys();
+			await AsyncStorage.multiRemove(keys);
+		}
+		test();
 		load();
 	}, []);
 
@@ -112,14 +118,18 @@ const FeedScreen = ({ navigation }) => {
 		<Layout style={{ flex: 1 }}>
 			<SafeAreaView style={styles.container}>
 				<TopNavigation title="Feed" alignment="center" />
-				<FlatList
-					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
-					data={feed}
-					renderItem={({ item }) => {
-						return <FeedOverview result={item} navigation={navigation} />;
-					}}
-					keyExtractor={(item, index) => index.toString()}
-				/>
+				{feed?.length == 0 ? (
+					<EmptyPlaceholder />
+				) : (
+					<FlatList
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
+						data={feed}
+						renderItem={({ item }) => {
+							return <FeedOverview result={item} navigation={navigation} />;
+						}}
+						keyExtractor={(item, index) => index.toString()}
+					/>
+				)}
 				<BottomNavBar index={1} navigation={navigation} />
 			</SafeAreaView>
 		</Layout>
