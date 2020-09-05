@@ -119,7 +119,10 @@ const FeedScreen = ({ navigation }) => {
 			<SafeAreaView style={styles.container}>
 				<TopNavigation title="Feed" alignment="center" />
 				{feed?.length == 0 ? (
-					<EmptyPlaceholder />
+					<EmptyPlaceholder
+						firstText="No feed link provided"
+						secondText="Please add a link inside the FeedList Menu"
+					/>
 				) : (
 					<FlatList
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}

@@ -6,6 +6,7 @@ import FeedFetcher from "../service/FeedFetcher";
 import { Button, Card, Modal, Text, TopNavigation, Layout } from "@ui-kitten/components";
 import { auth } from "firebase";
 import Validator from "../service/Validation";
+import EmptyPlaceholder from "../components/EmptyPlaceholder";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
@@ -80,18 +81,27 @@ const FeedListScreen = ({ navigation }) => {
 						</Card>
 					</Modal>
 					<View>
-						<FlatList
-							style={styles.feedList}
-							data={feedList}
-							renderItem={({ item }) => {
-								return (
-									<Button appearance="ghost" onPress={() => FeedFetcher.changeFeedLink(item)}>
-										{item}
-									</Button>
-								);
-							}}
-							keyExtractor={(item, index) => index.toString()}
-						/>
+						{feedList?.length == 0 ? (
+							<View style={styles.feedList}>
+								<EmptyPlaceholder
+									firstText="Empty feed list"
+									secondText="You can enter a feed link with the button above"
+								/>
+							</View>
+						) : (
+							<FlatList
+								style={styles.feedList}
+								data={feedList}
+								renderItem={({ item }) => {
+									return (
+										<Button appearance="ghost" onPress={() => FeedFetcher.changeFeedLink(item)}>
+											{item}
+										</Button>
+									);
+								}}
+								keyExtractor={(item, index) => index.toString()}
+							/>
+						)}
 						<Button style={styles.buttons} onPress={clearAppData}>
 							Clear Offline Storage
 						</Button>
