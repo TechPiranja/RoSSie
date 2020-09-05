@@ -17,11 +17,6 @@ const FeedScreen = ({ navigation }) => {
 	const isFocused = useIsFocused();
 
 	useEffect(() => {
-		async function test() {
-			const keys = await AsyncStorage.getAllKeys();
-			await AsyncStorage.multiRemove(keys);
-		}
-		test();
 		load();
 	}, []);
 
@@ -35,7 +30,7 @@ const FeedScreen = ({ navigation }) => {
 	useEffect(() => {
 		async function hasFeedLinkChanged() {
 			console.log("checking link from feedfetcher");
-			if (!Validator.validURL(await FeedFetcher.getCurrentFeedLink().toString())) return;
+			if (!Validator.validURL(await FeedFetcher.getCurrentFeedLink())) return;
 			else if (loadedFeedLink !== (await FeedFetcher.getCurrentFeedLink().toString())) {
 				let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
 				setLoadedFeedLink(currentFeedLink.toString());
