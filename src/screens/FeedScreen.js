@@ -7,9 +7,11 @@ import BottomNavBar from "../components/BottomNavBar";
 import FeedFetcher from "../service/FeedFetcher";
 import { useIsFocused } from "@react-navigation/native";
 import { TopNavigation, Layout } from "@ui-kitten/components";
+import Validator from "../service/Validation";
 
 const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
+	const [loadedFeedLink, setLoadedFeedLink] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 	const isFocused = useIsFocused();
 
@@ -25,14 +27,33 @@ const FeedScreen = ({ navigation }) => {
 	});
 
 	useEffect(() => {
-		setFeed((oldArray) => []);
-		fetchData();
-		console.log("used Effect!");
+		async function hasFeedLinkChanged() {
+			console.log("checking link from feedfetcher");
+			if (!Validator.validURL(await FeedFetcher.getCurrentFeedLink().toString())) return;
+			else if (loadedFeedLink !== (await FeedFetcher.getCurrentFeedLink().toString())) {
+				let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+				setLoadedFeedLink(currentFeedLink.toString());
+			}
+			console.log("Focused, loadedFeedLink: " + loadedFeedLink);
+		}
+		hasFeedLinkChanged();
 	}, [isFocused]);
+
+	useEffect(() => {
+		console.log("checking loaded feed link");
+		if (Validator.validURL(loadedFeedLink)) {
+			setFeed((oldArray) => []);
+			fetchData();
+			console.log("loadedFeedLink changed!");
+		}
+	}, [loadedFeedLink]);
 
 	const load = async () => {
 		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
-		setCurrentFeedFromLink(currentFeedLink);
+		console.log("checking feed link before loading");
+		if (!Validator.validURL(currentFeedLink)) return;
+
+		setLoadedFeedLink(currentFeedLink);
 		console.log("awaited feed link: " + currentFeedLink);
 		let jsonValue = await AsyncStorage.getItem("FeedData" + currentFeedLink);
 		console.log("is feed empty? : " + feed);
@@ -48,7 +69,11 @@ const FeedScreen = ({ navigation }) => {
 		let data = await FeedFetcher.fetchData();
 		loadXmlToFeed(data);
 		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
-		FeedFetcher.save("FeedData" + currentFeedLink, feed);
+		console.log("checking link in fetch data currentFeedLink");
+		if (Validator.validURL(currentFeedLink)) {
+			setLoadedFeedLink(currentFeedLink);
+			FeedFetcher.save("FeedData" + currentFeedLink, feed);
+		}
 	};
 
 	const loadXmlToFeed = async (value) => {

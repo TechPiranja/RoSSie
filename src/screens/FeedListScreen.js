@@ -5,6 +5,7 @@ import { FlatList, TextInput } from "react-native-gesture-handler";
 import FeedFetcher from "../service/FeedFetcher";
 import { Button, Card, Modal, Text, TopNavigation, Layout } from "@ui-kitten/components";
 import { auth } from "firebase";
+import Validator from "../service/Validation";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
@@ -27,6 +28,8 @@ const FeedListScreen = ({ navigation }) => {
 	};
 
 	const save = async (value) => {
+		if (!Validator.validURL(value)) return;
+
 		try {
 			let jsonValue = JSON.stringify([...feedList, value]);
 			await AsyncStorage.setItem("FeedList", jsonValue);
