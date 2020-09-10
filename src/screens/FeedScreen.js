@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { RefreshControl, StyleSheet, AsyncStorage, SafeAreaView, Text } from "react-native";
+import { RefreshControl, StyleSheet, AsyncStorage, SafeAreaView, Text, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import FeedOverview from "../components/FeedOverview";
 import { registerForPushNotificationsAsync } from "../service/pushNotification";
 import BottomNavBar from "../components/BottomNavBar";
 import FeedFetcher from "../service/FeedFetcher";
 import { useIsFocused } from "@react-navigation/native";
-import { TopNavigation, Layout } from "@ui-kitten/components";
+import { TopNavigation, Layout, Spinner } from "@ui-kitten/components";
 import Validator from "../service/Validation";
 import EmptyPlaceholder from "../components/EmptyPlaceholder";
 
@@ -14,6 +14,7 @@ const FeedScreen = ({ navigation }) => {
 	const [feed, setFeed] = useState([]);
 	const [loadedFeedLink, setLoadedFeedLink] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
+	const [fetching, setFetching] = useState(false);
 	const isFocused = useIsFocused();
 
 	useEffect(() => {
@@ -67,6 +68,7 @@ const FeedScreen = ({ navigation }) => {
 	};
 
 	const fetchData = async () => {
+		setFetching(true);
 		let data = await FeedFetcher.fetchData();
 		loadXmlToFeed(data);
 		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
@@ -75,6 +77,7 @@ const FeedScreen = ({ navigation }) => {
 			setLoadedFeedLink(currentFeedLink);
 			FeedFetcher.save("FeedData" + currentFeedLink, feed);
 		}
+		setFetching(false);
 	};
 
 	const loadXmlToFeed = async (value) => {
@@ -114,10 +117,17 @@ const FeedScreen = ({ navigation }) => {
 			<SafeAreaView style={styles.container}>
 				<TopNavigation title="Feed" alignment="center" />
 				{feed?.length == 0 ? (
-					<EmptyPlaceholder
-						firstText="No feed link provided"
-						secondText="Please add a link inside the FeedList Menu"
-					/>
+					fetching ? (
+						<Layout style={styles.centered}>
+							<Spinner size="giant" />
+							<Text style={{ color: "#999", margin: 10 }}>Loading</Text>
+						</Layout>
+					) : (
+						<EmptyPlaceholder
+							firstText="No feed link provided"
+							secondText="Please add a link inside the FeedList Menu"
+						/>
+					)
 				) : (
 					<FlatList
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchData} />}
@@ -135,6 +145,12 @@ const FeedScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+	centered: {
+		display: "flex",
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
 	container: {
 		flex: 1,
 		flexDirection: "column",

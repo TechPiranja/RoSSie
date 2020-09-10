@@ -3,7 +3,17 @@ import { View, StyleSheet, AsyncStorage, SafeAreaView, Animated, TouchableOpacit
 import BottomNavBar from "../components/BottomNavBar";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import FeedFetcher from "../service/FeedFetcher";
-import { Button, Card, Modal, Text, TopNavigation, Layout } from "@ui-kitten/components";
+import {
+	Button,
+	Card,
+	Modal,
+	Text,
+	TopNavigation,
+	Layout,
+	Divider,
+	TopNavigationAction,
+	Icon,
+} from "@ui-kitten/components";
 import { auth } from "firebase";
 import Validator from "../service/Validation";
 import EmptyPlaceholder from "../components/EmptyPlaceholder";
@@ -60,17 +70,17 @@ const FeedListScreen = ({ navigation }) => {
 		setFeedList(() => []);
 	};
 
+	const BackAction = () => <TopNavigationAction icon={BackIcon} onPress={() => setVisible(true)} />;
+
+	const BackIcon = (props) => <Icon {...props} name="plus-outline" />;
+
 	return (
 		<Layout style={{ flex: 1 }}>
 			<SafeAreaView style={styles.description}>
-				<TopNavigation title="FeedList" alignment="center" />
+				<TopNavigation title="FeedList" alignment="center" accessoryRight={BackAction} />
 				<View style={styles.innerContainer}>
-					<Button style={styles.buttons} onPress={() => setVisible(true)}>
-						Add Feed
-					</Button>
-
 					<Modal
-						width="70%"
+						width="80%"
 						visible={visible}
 						backdropStyle={styles.backdrop}
 						onBackdropPress={() => setVisible(false)}
@@ -102,13 +112,16 @@ const FeedListScreen = ({ navigation }) => {
 								data={feedList}
 								renderItem={({ item }) => {
 									return (
-										<Button
-											style={styles.btn}
-											appearance="ghost"
-											onPress={() => FeedFetcher.changeFeedLink(item)}
-										>
-											{item}
-										</Button>
+										<View>
+											<Divider />
+											<Button
+												style={styles.btn}
+												appearance="ghost"
+												onPress={() => FeedFetcher.changeFeedLink(item)}
+											>
+												{item}
+											</Button>
+										</View>
 									);
 								}}
 								renderHiddenItem={(data) => (
@@ -137,9 +150,9 @@ const FeedListScreen = ({ navigation }) => {
 								keyExtractor={(item, index) => index.toString()}
 							/>
 						)}
-						<Button style={styles.buttons} onPress={clearAppData}>
+						{/* <Button style={styles.buttons} onPress={clearAppData}>
 							Clear Offline Storage
-						</Button>
+						</Button> */}
 					</View>
 				</View>
 				<BottomNavBar index={0} navigation={navigation} style={styles.bottomNav} />
@@ -154,7 +167,6 @@ const styles = StyleSheet.create({
 		borderRadius: 0,
 	},
 	container: {
-		backgroundColor: "white",
 		flex: 1,
 	},
 	backTextWhite: {
@@ -181,9 +193,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 15,
 	},
 	feedList: {
-		backgroundColor: "#fff",
-		marginHorizontal: 10,
-		borderRadius: 10,
 		height: "80%",
 	},
 	description: {
@@ -198,18 +207,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "#eee",
 	},
 	textInput: {
-		height: 30,
 		borderColor: "transparent",
 		borderWidth: 1,
-		borderRadius: 10,
+		borderRadius: 5,
 		padding: 5,
 		textAlign: "center",
-		width: "70%",
-		backgroundColor: "#fff",
+		backgroundColor: "#eee",
 	},
 	buttons: {
-		margin: 10,
-		width: "auto",
+		margin: 15,
+		height: 20,
 	},
 	backdrop: {
 		backgroundColor: "rgba(0, 0, 0, 0.5)",
