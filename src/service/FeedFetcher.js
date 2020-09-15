@@ -24,7 +24,7 @@ class FeedFetcher {
 	};
 
 	changeFeedLink = async (value) => {
-		if (Validator.validURL(value)) this.save("CurrentFeedLink", value);
+		this.save("CurrentFeedLink", value);
 	};
 
 	clearAppData = async function () {
@@ -34,6 +34,10 @@ class FeedFetcher {
 		} catch (error) {
 			console.error("Error clearing app data.");
 		}
+	};
+
+	removeFeed = async (link) => {
+		AsyncStorage.removeItem("FeedData" + link);
 	};
 }
 
