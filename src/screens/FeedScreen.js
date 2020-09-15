@@ -92,24 +92,20 @@ const FeedScreen = ({ navigation }) => {
 				return;
 			}
 			var data = JSON.parse(obj);
-			rssData.push({
-				title: "test",
-				time: "test",
-				link: "element.link",
-				description: "element.description[0]",
-			});
 			data.rss.channel[0].item.forEach((element) => {
-				let obj = {
+				let x = {
 					title: element.title[0],
 					time: element.pubDate,
 					link: element.link,
 					description: element.description[0],
 				};
-				rssData.push(obj);
+				rssData.push(x);
 			});
+			console.log(rssData);
 		});
 
-		let filteredList = rssData.filter((x) => feed.some((y) => y.time === x.time && y.title === x.title));
+		let filteredList = rssData.filter((x) => !feed.some((y) => y.time === x.time && y.title === x.title));
+		console.log(filteredList.length + " and " + feed.length);
 		if (isReload && filteredList.length === feed.length) {
 			console.log("is same so return");
 			return;
