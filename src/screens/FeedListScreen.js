@@ -39,12 +39,6 @@ const FeedListScreen = ({ navigation }) => {
 		});
 	};
 
-	const rowTranslateAnimatedValues = {};
-	Array(20)
-		.fill("")
-		.forEach((_, i) => {
-			rowTranslateAnimatedValues[`${i}`] = new Animated.Value(1);
-		});
 	const save = async (value) => {
 		if (!Validator.validURL(value)) return;
 
@@ -128,7 +122,7 @@ const FeedListScreen = ({ navigation }) => {
 									<View style={styles.rowBack}>
 										<View style={[styles.backRightBtn, styles.backRightBtnRight]}>
 											<TouchableOpacity
-												onPress={() => {
+												onPress={async () => {
 													let indexToDelete = feedList.indexOf(data.item);
 													console.log(indexToDelete);
 													setFeedList(() =>
@@ -138,6 +132,8 @@ const FeedListScreen = ({ navigation }) => {
 														"FeedList",
 														feedList.filter((x, index) => index != indexToDelete)
 													);
+													let link = await FeedFetcher.getCurrentFeedLink();
+													await FeedFetcher.removeFeed(link);
 												}}
 												style={styles.backTextWhite}
 											>
