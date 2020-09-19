@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import FeedScreen from "./src/screens/FeedScreen";
 import FeedListScreen from "./src/screens/FeedListScreen";
 import FeedDetailScreen from "./src/screens/FeedDetailScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
 import { ApplicationProvider, IconRegistry, Layout } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { default as theme } from "./custom-theme.json";
@@ -23,6 +24,14 @@ const HomeNavigator = () => (
 			}}
 		/>
 		<Screen name="FeedDetail" component={FeedDetailScreen} />
+		<Screen
+			name="Settings"
+			component={SettingsScreen}
+			options={{
+				headerLeft: () => null,
+				animationEnabled: false,
+			}}
+		/>
 		<Screen
 			name="FeedList"
 			component={FeedListScreen}
