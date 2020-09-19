@@ -3,6 +3,7 @@ import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 import { Layout, TopNavigation, TopNavigationAction, Icon, Button, Divider, Toggle } from "@ui-kitten/components";
 import BottomNavBar from "../components/BottomNavBar";
 import { ScrollView } from "react-native-gesture-handler";
+import FeedFetcher from "../service/FeedFetcher";
 
 const SettingsScreen = ({ navigation }) => {
 	const [checkedOfflineMode, setCheckedOfflineMode] = React.useState(false);
@@ -22,14 +23,27 @@ const SettingsScreen = ({ navigation }) => {
 				<ScrollView style={styles.innerContainer}>
 					<Text style={{ margin: 10, marginTop: 20 }}>Storage</Text>
 					<View style={styles.block}>
-						<Button appearance="ghost" style={styles.btn}>
+						<Button
+							appearance="ghost"
+							style={styles.btn}
+							onPress={() => FeedFetcher.clearOfflineFeedStorage()}
+						>
 							<Text style={styles.text}>Delete Offline Feed Storage</Text>
 						</Button>
-						<Button appearance="ghost" style={styles.btn}>
+						<Divider />
+						<Button
+							appearance="ghost"
+							style={styles.btn}
+							onPress={() => FeedFetcher.clearFeedLinkListFromStorage()}
+						>
 							<Text style={styles.text}>Delete all FeedLinks</Text>
 						</Button>
+						<Divider />
+						<Button appearance="ghost" style={styles.btn} onPress={() => FeedFetcher.clearAppData()}>
+							<Text style={styles.text}>Clear App Cache</Text>
+						</Button>
 					</View>
-					<Text style={{ margin: 10, marginTop: 20 }}>Download</Text>
+					{/* <Text style={{ margin: 10, marginTop: 20 }}>Download</Text>
 					<View style={styles.block}>
 						<View style={styles.rowContainer}>
 							<Text style={styles.text}>Offline Mode</Text>
@@ -47,7 +61,7 @@ const SettingsScreen = ({ navigation }) => {
 						<Button appearance="ghost" style={styles.btn}>
 							<Text style={styles.text}>Reset Settings</Text>
 						</Button>
-					</View>
+					</View> */}
 				</ScrollView>
 
 				<BottomNavBar index={2} navigation={navigation} />

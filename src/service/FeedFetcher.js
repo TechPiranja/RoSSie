@@ -36,6 +36,31 @@ class FeedFetcher {
 		}
 	};
 
+	clearOfflineFeedStorage = async () => {
+		const keys = await AsyncStorage.getAllKeys();
+		let feedLinks = await this.loadFeedListFromStorage();
+		if (feedLinks == undefined || feedLinks.length == 0) return;
+		let filteredKeys = keys.filter((x) => feedLinks.some((link) => x.includes(link)));
+		await AsyncStorage.multiRemove(filteredKeys);
+	};
+
+	clearFeedLinkListFromStorage = async () => {
+		await this.clearOfflineFeedStorage();
+		await this.save("FeedList", []);
+	};
+
+	loadFeedListFromStorage = async () => {
+		let jsonValue = await AsyncStorage.getItem("FeedList");
+		jsonValue = JSON.parse(jsonValue);
+		if (jsonValue == null || jsonValue.length == 0) return;
+		let tempList = [];
+		jsonValue.forEach((element) => {
+			tempList.push(element);
+		});
+
+		return tempList;
+	};
+
 	removeFeed = async (link) => {
 		AsyncStorage.removeItem("FeedData" + link);
 	};
