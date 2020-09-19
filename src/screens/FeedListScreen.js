@@ -7,24 +7,28 @@ import Validator from "../service/Validation";
 import EmptyPlaceholder from "../components/EmptyPlaceholder";
 import FeedList from "../components/FeedList";
 import FeedListModal from "../components/FeedListModal";
+import FeedFetcher from "../service/FeedFetcher";
+import { useIsFocused } from "@react-navigation/native";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
 	const [newFeedLink, setNewFeedLink] = useState("");
 	const [visible, setVisible] = React.useState(false);
+	const isFocused = useIsFocused();
 
 	useEffect(() => {
 		loadFeedListFromStorage();
 	}, []);
 
-	const loadFeedListFromStorage = async () => {
-		let jsonValue = await AsyncStorage.getItem("FeedList");
-		jsonValue = JSON.parse(jsonValue);
-		if (jsonValue == null || jsonValue.length == 0) return;
-		jsonValue.forEach((element) => {
-			setFeedList((oldArray) => [...oldArray, element]);
-		});
-	};
+	useEffect(() => {
+		loadFeedListFromStorage();
+	}, [isFocused]);
+
+	async function loadFeedListFromStorage() {
+		let feedListFromStorage = await FeedFetcher.loadFeedListFromStorage();
+		if (feedListFromStorage == undefined || feedListFromStorage.length == 0) setFeedList([]);
+		else setFeedList([...feedListFromStorage]);
+	}
 
 	const save = async (value) => {
 		if (!Validator.validURL(value)) return;
