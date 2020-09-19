@@ -26,34 +26,20 @@ const FeedScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		async function hasFeedLinkChanged() {
-			console.log("checking link from feedfetcher");
 			let currentLink = await FeedFetcher.getCurrentFeedLink();
 			if (!Validator.validURL(currentLink) || currentLink == "") return;
-			else if (loadedFeedLink !== (await FeedFetcher.getCurrentFeedLink().toString())) {
-				let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+			else if (loadedFeedLink !== currentLink) {
 				load();
-
-				setLoadedFeedLink(currentFeedLink.toString());
-				console.log("Focused, loadedFeedLink: " + currentFeedLink);
+				setLoadedFeedLink(currentLink);
 			}
 		}
 		hasFeedLinkChanged();
 	}, [isFocused]);
 
-	useEffect(() => {
-		console.log("loadedFeedLink and feed changed!");
-	}, [loadedFeedLink]);
-
 	const load = async () => {
 		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
-		console.log("checking feed link before loading from offline storage");
 		if (!Validator.validURL(currentFeedLink)) return;
-
-		console.log("awaited feed link: " + currentFeedLink);
 		let jsonValue = await AsyncStorage.getItem("FeedData" + currentFeedLink);
-		console.log("is feed empty? : " + feed);
-		console.log("offline data is: ");
-		console.log(JSON.parse(jsonValue));
 		jsonValue = JSON.parse(jsonValue);
 		if (jsonValue == null || jsonValue.length == 0) {
 			console.log("Feed was not inside offline storage");
@@ -67,65 +53,16 @@ const FeedScreen = ({ navigation }) => {
 		});
 
 		setFeed(() => [...tempArr]);
-		console.log("loaded");
 	};
 
 	const fetchData = async () => {
-		console.log("fetching data...");
 		setFetching(true);
 		let data = await FeedFetcher.fetchData();
 		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
 		let isReload = currentFeedLink !== loadedFeedLink ? false : true;
-		console.log("currentfeedlink: " + currentFeedLink + " and loadedFeedLink: " + loadedFeedLink);
-		await loadXmlToFeed(data, isReload);
+		let newFeed = await FeedFetcher.loadXmlToFeed(data, isReload, feed);
+		setFeed([...newFeed]);
 		setFetching(false);
-	};
-
-	const loadXmlToFeed = async (value, isReload) => {
-		let tempArr = [];
-		let rssData = [];
-		var parseString = require("react-native-xml2js").parseString;
-		parseString(value.data, function (err, result) {
-			var obj = JSON.stringify(result);
-			if (obj == undefined) {
-				console.log("data was undefined!");
-				return;
-			}
-			var data = JSON.parse(obj);
-			data.rss.channel[0].item.forEach((element) => {
-				let x = {
-					title: element.title[0],
-					time: element.pubDate,
-					link: element.link,
-					description: element.description[0],
-				};
-				rssData.push(x);
-			});
-			console.log(rssData);
-		});
-
-		let filteredList = rssData.filter((x) => !feed.some((y) => y.time === x.time && y.title === x.title));
-		console.log(filteredList.length + " and " + feed.length);
-		if (isReload && filteredList.length === feed.length) {
-			console.log("is same so return");
-			return;
-		}
-
-		rssData.forEach((obj) => {
-			if (isReload && !feed.some((e) => e.title == obj.title) && !tempArr.some((e) => e.title == obj.title))
-				tempArr.push(obj);
-			else if (!tempArr.some((e) => e.title == obj.title)) tempArr.push(obj);
-		});
-
-		console.log("reloaded");
-		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
-		setFeed(() => [...tempArr]);
-		console.log("checking link in fetch data currentFeedLink");
-		if (Validator.validURL(currentFeedLink)) {
-			//setLoadedFeedLink(currentFeedLink);
-			await FeedFetcher.save("FeedData" + currentFeedLink, tempArr);
-			console.log("Saving Feed in offline storage");
-		}
 	};
 
 	//registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />

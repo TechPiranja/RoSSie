@@ -39,6 +39,52 @@ class FeedFetcher {
 	removeFeed = async (link) => {
 		AsyncStorage.removeItem("FeedData" + link);
 	};
+
+	loadXmlToFeed = async (value, isReload, feed) => {
+		let tempArr = [];
+		let rssData = [];
+		var parseString = require("react-native-xml2js").parseString;
+		parseString(value.data, function (err, result) {
+			var obj = JSON.stringify(result);
+			if (obj == undefined) {
+				console.log("data was undefined!");
+				return;
+			}
+			var data = JSON.parse(obj);
+			data.rss.channel[0].item.forEach((element) => {
+				let x = {
+					title: element.title[0],
+					time: element.pubDate,
+					link: element.link,
+					description: element.description[0],
+				};
+				rssData.push(x);
+			});
+		});
+
+		let filteredList = rssData.filter((x) => !feed.some((y) => y.time === x.time && y.title === x.title));
+		console.log(filteredList.length + " and " + feed.length);
+		// if the data length is same and the first item is same, the fetched list has no new items, so we just return
+		if (isReload && filteredList.length === feed.length && filteredList[0].title === feed[0].title) {
+			console.log("is same so return");
+			return;
+		}
+
+		// fills data by checking for "isReload" -> full data or only new data
+		rssData.forEach((obj) => {
+			if (isReload && !feed.some((e) => e.title == obj.title) && !tempArr.some((e) => e.title == obj.title))
+				tempArr.push(obj);
+			else if (!tempArr.some((e) => e.title == obj.title)) tempArr.push(obj);
+		});
+
+		let currentFeedLink = await this.getCurrentFeedLink();
+		if (Validator.validURL(currentFeedLink)) {
+			await this.save("FeedData" + currentFeedLink, tempArr);
+			console.log("Saving Feed in offline storage");
+		}
+
+		return tempArr;
+	};
 }
 
 export default new FeedFetcher();
