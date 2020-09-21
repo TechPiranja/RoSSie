@@ -86,18 +86,16 @@ class FeedFetcher {
 				rssData.push(x);
 			});
 		});
-
-		let filteredList = rssData.filter((x) => !feed.some((y) => y.time === x.time && y.title === x.title));
-		console.log(filteredList.length + " and " + feed.length);
+		console.log(rssData.length + " and " + feed.length);
 		// if the data length is same and the first item is same, the fetched list has no new items, so we just return
-		if (isReload && filteredList.length === feed.length && filteredList[0].title === feed[0].title) {
+		if (isReload && rssData.length === feed.length && rssData[0].title === feed[0].title) {
 			console.log("is same so return");
-			return;
+			return rssData;
 		}
 
 		// fills data by checking for "isReload" -> full data or only new data
 		rssData.forEach((obj) => {
-			if (isReload && !feed.some((e) => e.title == obj.title) && !tempArr.some((e) => e.title == obj.title))
+			if (!(isReload && !feed.some((e) => e.title == obj.title) && !tempArr.some((e) => e.title == obj.title)))
 				tempArr.push(obj);
 			else if (!tempArr.some((e) => e.title == obj.title)) tempArr.push(obj);
 		});
@@ -107,6 +105,7 @@ class FeedFetcher {
 			await this.save("FeedData" + currentFeedLink, tempArr);
 			console.log("Saving Feed in offline storage");
 		}
+		console.log(tempArr);
 
 		return tempArr;
 	};

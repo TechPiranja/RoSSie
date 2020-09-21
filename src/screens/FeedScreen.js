@@ -27,7 +27,12 @@ const FeedScreen = ({ navigation }) => {
 	useEffect(() => {
 		async function hasFeedLinkChanged() {
 			let currentLink = await FeedFetcher.getCurrentFeedLink();
-			if (!Validator.validURL(currentLink) || currentLink == "") return;
+			console.log(currentLink);
+			console.log(loadedFeedLink);
+			if (currentLink == "" || currentLink == null) {
+				setFeed([]);
+				setLoadedFeedLink(null);
+			} else if (!Validator.validURL(currentLink)) return;
 			else if (loadedFeedLink !== currentLink) {
 				load();
 				setLoadedFeedLink(currentLink);
@@ -56,9 +61,15 @@ const FeedScreen = ({ navigation }) => {
 	};
 
 	const fetchData = async () => {
+		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
+		console.log(currentFeedLink);
+		if (currentFeedLink == "" || currentFeedLink == null) {
+			setFeed([]);
+			setLoadedFeedLink(null);
+			return;
+		}
 		setFetching(true);
 		let data = await FeedFetcher.fetchData();
-		let currentFeedLink = await FeedFetcher.getCurrentFeedLink();
 		let isReload = currentFeedLink !== loadedFeedLink ? false : true;
 		let newFeed = await FeedFetcher.loadXmlToFeed(data, isReload, feed);
 		setFeed([...newFeed]);
