@@ -15,7 +15,9 @@ const deleteFeedItem = async (data, feedList, setFeedList) => {
 	await FeedFetcher.removeFeed(link);
 };
 
-const FeedList = ({ feedList, setFeedList }) => {
+
+
+const FeedList = ({ feedList, setFeedList, changeFeedLink }) => {
 	return (
 		<SwipeListView
 			disableRightSwipe
@@ -25,7 +27,7 @@ const FeedList = ({ feedList, setFeedList }) => {
 				return (
 					<View>
 						<Divider />
-						<Button style={styles.btn} appearance="ghost" onPress={() => FeedFetcher.changeFeedLink(item)}>
+						<Button style={styles.btn} appearance="ghost" onPress={() => changeFeedLink(item)}>
 							{item}
 						</Button>
 					</View>
