@@ -4,6 +4,7 @@ import { Layout, TopNavigation, TopNavigationAction, Icon, Button, Divider, Togg
 import BottomNavBar from "../components/BottomNavBar";
 import { ScrollView } from "react-native-gesture-handler";
 import FeedFetcher from "../service/FeedFetcher";
+import Toast from "react-native-tiny-toast";
 
 const SettingsScreen = ({ navigation }) => {
 	const [checkedOfflineMode, setCheckedOfflineMode] = React.useState(false);
@@ -26,7 +27,13 @@ const SettingsScreen = ({ navigation }) => {
 						<Button
 							appearance="ghost"
 							style={styles.btn}
-							onPress={() => FeedFetcher.clearOfflineFeedStorage()}
+							onPress={() => {
+								FeedFetcher.clearOfflineFeedStorage(),
+									Toast.showSuccess("Cleared offline Feed Storage!", {
+										position: Toast.position.CENTER,
+										duration: 1500,
+									});
+							}}
 						>
 							<Text style={styles.text}>Delete Offline Feed Storage</Text>
 						</Button>
@@ -34,12 +41,28 @@ const SettingsScreen = ({ navigation }) => {
 						<Button
 							appearance="ghost"
 							style={styles.btn}
-							onPress={() => FeedFetcher.clearFeedLinkListFromStorage()}
+							onPress={() => {
+								FeedFetcher.clearFeedLinkListFromStorage(),
+									Toast.showSuccess("Cleared Feedlink Storage!", {
+										position: Toast.position.CENTER,
+										duration: 1500,
+									});
+							}}
 						>
 							<Text style={styles.text}>Delete all FeedLinks</Text>
 						</Button>
 						<Divider />
-						<Button appearance="ghost" style={styles.btn} onPress={() => FeedFetcher.clearAppData()}>
+						<Button
+							appearance="ghost"
+							style={styles.btn}
+							onPress={() => {
+								FeedFetcher.clearAppData(),
+									Toast.showSuccess("Cleared App Data!", {
+										position: Toast.position.CENTER,
+										duration: 1500,
+									});
+							}}
+						>
 							<Text style={styles.text}>Clear App Cache</Text>
 						</Button>
 					</View>

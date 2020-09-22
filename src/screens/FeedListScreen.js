@@ -9,11 +9,13 @@ import FeedList from "../components/FeedList";
 import FeedListModal from "../components/FeedListModal";
 import FeedFetcher from "../service/FeedFetcher";
 import { useIsFocused } from "@react-navigation/native";
+import Toast from "react-native-tiny-toast";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
 	const [newFeedLink, setNewFeedLink] = useState("");
-	const [visible, setVisible] = React.useState(false);
+	const [visibleModal, setVisibleModal] = React.useState(false);
+	const [visibleToast, setVisibleToast] = React.useState(false);
 	const isFocused = useIsFocused();
 
 	useEffect(() => {
@@ -40,10 +42,10 @@ const FeedListScreen = ({ navigation }) => {
 			console.log("Error: " + e);
 		}
 		setFeedList((oldArray) => [...oldArray, value]);
-		setVisible(false);
+		setVisibleModal(false);
 	};
 
-	const BackAction = () => <TopNavigationAction icon={BackIcon} onPress={() => setVisible(true)} />;
+	const BackAction = () => <TopNavigationAction icon={BackIcon} onPress={() => setVisibleModal(true)} />;
 
 	const BackIcon = (props) => <Icon {...props} name="plus-outline" />;
 
@@ -51,14 +53,32 @@ const FeedListScreen = ({ navigation }) => {
 		setFeedList(() => feedList.filter((x, index) => index != indexToDelete));
 	};
 
+	const changeFeedLink = (item) => {
+		FeedFetcher.changeFeedLink(item);
+		navigation.navigate("Feed");
+		Toast.showSuccess("Changed current Feedlink!", {
+			position: Toast.position.CENTER,
+			duration: 1200,
+		});
+	};
+
 	return (
 		<Layout style={{ flex: 1 }}>
 			<SafeAreaView style={styles.description}>
 				<TopNavigation title="FeedList" alignment="center" accessoryRight={BackAction} />
 				<View style={styles.innerContainer}>
+					<Toast
+						visible={visibleToast}
+						position={0}
+						onHidden={() => {
+							// onHidden
+						}}
+					>
+						This is a message
+					</Toast>
 					<FeedListModal
-						visible={visible}
-						onBackdropPress={() => setVisible(false)}
+						visible={visibleModal}
+						onBackdropPress={() => setVisibleModal(false)}
 						newFeedLink={newFeedLink}
 						setNewFeedLink={(text) => setNewFeedLink(text)}
 						save={save}
@@ -69,7 +89,11 @@ const FeedListScreen = ({ navigation }) => {
 							secondText="You can enter a feed link with the button above"
 						/>
 					) : (
-						<FeedList feedList={feedList} setFeedList={DeleteItemFromFeed} />
+						<FeedList
+							feedList={feedList}
+							setFeedList={DeleteItemFromFeed}
+							changeFeedLink={changeFeedLink}
+						/>
 					)}
 				</View>
 				<BottomNavBar index={0} navigation={navigation} style={styles.bottomNav} />
