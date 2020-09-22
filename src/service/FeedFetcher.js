@@ -86,6 +86,7 @@ class FeedFetcher {
 				rssData.push(x);
 			});
 		});
+
 		console.log(rssData.length + " and " + feed.length);
 		// if the data length is same and the first item is same, the fetched list has no new items, so we just return
 		if (isReload && rssData.length === feed.length && rssData[0].title === feed[0].title) {

@@ -13,7 +13,6 @@ import Toast from "react-native-tiny-toast";
 
 const FeedListScreen = ({ navigation }) => {
 	const [feedList, setFeedList] = useState([]);
-	const [newFeedLink, setNewFeedLink] = useState("");
 	const [visibleModal, setVisibleModal] = React.useState(false);
 	const [visibleToast, setVisibleToast] = React.useState(false);
 	const isFocused = useIsFocused();
@@ -33,8 +32,8 @@ const FeedListScreen = ({ navigation }) => {
 	}
 
 	const save = async (value) => {
-		if (!Validator.validURL(value)) return;
-
+		if (!Validator.validURL(value.link)) return;
+		
 		try {
 			let jsonValue = JSON.stringify([...feedList, value]);
 			await AsyncStorage.setItem("FeedList", jsonValue);
@@ -76,13 +75,7 @@ const FeedListScreen = ({ navigation }) => {
 					>
 						This is a message
 					</Toast>
-					<FeedListModal
-						visible={visibleModal}
-						onBackdropPress={() => setVisibleModal(false)}
-						newFeedLink={newFeedLink}
-						setNewFeedLink={(text) => setNewFeedLink(text)}
-						save={save}
-					/>
+					<FeedListModal visible={visibleModal} onBackdropPress={() => setVisibleModal(false)} save={save} />
 					{feedList?.length == 0 ? (
 						<EmptyPlaceholder
 							firstText="Empty feed list"
