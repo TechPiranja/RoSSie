@@ -1,9 +1,20 @@
-import { Button, Card, Modal } from "@ui-kitten/components";
-import React from "react";
+import { Button, Card, Modal, Text } from "@ui-kitten/components";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
-const FeedListModal = ({ visible, onBackdropPress, setNewFeedLink, newFeedLink, save }) => {
+const FeedListModal = ({ visible, onBackdropPress, save }) => {
+	const [FeedLink, setFeedLink] = useState("");
+	const [FeedName, setFeedName] = useState("");
+
+	const saveInput = () => {
+		let feedItem = {
+			name: FeedName,
+			link: FeedLink,
+		};
+		save(feedItem);
+	};
+
 	return (
 		<Modal
 			style={styles.container}
@@ -13,13 +24,21 @@ const FeedListModal = ({ visible, onBackdropPress, setNewFeedLink, newFeedLink, 
 			onBackdropPress={onBackdropPress}
 		>
 			<Card disabled={true}>
+				<Text style={styles.label}>Feed Name:</Text>
+				<TextInput
+					style={styles.textInput}
+					placeholder="My Feed"
+					onChangeText={(text) => setFeedName(text)}
+					value={FeedName}
+				/>
+				<Text style={styles.label}>Feedlink:</Text>
 				<TextInput
 					style={styles.textInput}
 					placeholder="https://www.FeedLink.xml"
-					onChangeText={(text) => setNewFeedLink(text)}
-					value={newFeedLink}
+					onChangeText={(text) => setFeedLink(text)}
+					value={FeedLink}
 				/>
-				<Button style={styles.buttons} onPress={() => save(newFeedLink)}>
+				<Button appearance="ghost" style={styles.buttons} onPress={() => saveInput()}>
 					Add Feed
 				</Button>
 			</Card>
@@ -28,6 +47,10 @@ const FeedListModal = ({ visible, onBackdropPress, setNewFeedLink, newFeedLink, 
 };
 
 const styles = StyleSheet.create({
+	label: {
+		marginTop: 15,
+		marginBottom: 5,
+	},
 	textInput: {
 		borderColor: "transparent",
 		borderWidth: 1,
