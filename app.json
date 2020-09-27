@@ -4,7 +4,7 @@
 		"slug": "RoSSie",
 		"privacy": "public",
 		"platforms": ["ios", "android", "web"],
-		"version": "1.0.9",
+		"version": "1.0.10",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"splash": {
@@ -21,7 +21,8 @@
 			"supportsTablet": true
 		},
 		"android": {
-			"package": "com.techpiranja.RoSSie"
+			"package": "com.techpiranja.RoSSie",
+			"versionCode": 3
 		}
 	}
 }
