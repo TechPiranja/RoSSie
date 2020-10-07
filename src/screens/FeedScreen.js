@@ -103,10 +103,12 @@ const FeedScreen = ({navigation}) => {
             <Text style={{color: '#999', margin: 10}}>Loading</Text>
           </Layout>
         ) : (
-          <EmptyPlaceholder
-            firstText="No feed link provided"
-            secondText="Please add a link inside the FeedList Menu"
-          />
+          <Layout style={styles.centered}>
+            <EmptyPlaceholder
+              firstText="No feed link provided"
+              secondText="Please add a link inside the FeedList Menu"
+            />
+          </Layout>
         )
       ) : (
         <FlatList
@@ -126,15 +128,12 @@ const FeedScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  androidSafeView: {
-    flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
   centered: {
     display: 'flex',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#eee',
   },
   container: {
     flex: 1,
