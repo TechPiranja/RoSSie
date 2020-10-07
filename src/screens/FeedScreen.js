@@ -2,7 +2,14 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {RefreshControl, StyleSheet, SafeAreaView, Text} from 'react-native';
+import MySafeAreaView from '../components/MySafeAreaView';
+import {
+  RefreshControl,
+  StyleSheet,
+  Text,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
 import FeedOverview from '../components/FeedOverview';
@@ -87,36 +94,36 @@ const FeedScreen = ({navigation}) => {
   //registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
   return (
-    <Layout style={{flex: 1}}>
-      <SafeAreaView style={styles.container}>
-        <TopNavigation title="Feed" alignment="center" />
-        {feed?.length == 0 ? (
-          fetching ? (
-            <Layout style={styles.centered}>
-              <Spinner size="giant" />
-              <Text style={{color: '#999', margin: 10}}>Loading</Text>
-            </Layout>
-          ) : (
+    <MySafeAreaView>
+      <TopNavigation title="Feed" alignment="center" />
+      {feed?.length == 0 ? (
+        fetching ? (
+          <Layout style={styles.centered}>
+            <Spinner size="giant" />
+            <Text style={{color: '#999', margin: 10}}>Loading</Text>
+          </Layout>
+        ) : (
+          <Layout style={styles.centered}>
             <EmptyPlaceholder
               firstText="No feed link provided"
               secondText="Please add a link inside the FeedList Menu"
             />
-          )
-        ) : (
-          <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
-            }
-            data={feed}
-            renderItem={({item}) => {
-              return <FeedOverview result={item} navigation={navigation} />;
-            }}
-            keyExtractor={(_item, index) => index.toString()}
-          />
-        )}
-        <BottomNavBar index={1} navigation={navigation} />
-      </SafeAreaView>
-    </Layout>
+          </Layout>
+        )
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+          }
+          data={feed}
+          renderItem={({item}) => {
+            return <FeedOverview result={item} navigation={navigation} />;
+          }}
+          keyExtractor={(_item, index) => index.toString()}
+        />
+      )}
+      <BottomNavBar index={1} navigation={navigation} />
+    </MySafeAreaView>
   );
 };
 
@@ -126,6 +133,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#eee',
   },
   container: {
     flex: 1,

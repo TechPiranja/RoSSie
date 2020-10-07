@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, SafeAreaView} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import BottomNavBar from '../components/BottomNavBar';
 import {
@@ -17,6 +17,7 @@ import FeedListModal from '../components/FeedListModal';
 import FeedFetcher from '../services/FeedFetcher';
 import {useIsFocused} from '@react-navigation/native';
 import Toast from 'react-native-tiny-toast';
+import MySafeAreaView from '../components/MySafeAreaView';
 
 const FeedListScreen = ({navigation}) => {
   const [feedList, setFeedList] = useState([]);
@@ -80,7 +81,7 @@ const FeedListScreen = ({navigation}) => {
 
   return (
     <Layout style={{flex: 1}}>
-      <SafeAreaView style={styles.description}>
+      <MySafeAreaView style={styles.description}>
         <TopNavigation
           title="FeedList"
           alignment="center"
@@ -118,7 +119,7 @@ const FeedListScreen = ({navigation}) => {
           navigation={navigation}
           style={styles.bottomNav}
         />
-      </SafeAreaView>
+      </MySafeAreaView>
     </Layout>
   );
 };

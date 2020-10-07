@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Linking} from 'react-native';
 import {ScrollView, Dimensions} from 'react-native';
 import HTML from 'react-native-render-html';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 
 const FeedDetail = ({result}) => {
   return (
@@ -17,8 +17,7 @@ const FeedDetail = ({result}) => {
         <Text style={styles.time}>Time: {result.time} </Text>
         <TouchableOpacity
           onPress={() => Linking.openURL(result.link.toString())}>
-          {/* <Feather name="external-link" style={styles.iconStyle} /> */}
-          <Icon name="rocket" size={30} color="#4F8EF7" />
+          <Icon name="external-link" style={styles.iconStyle} />
         </TouchableOpacity>
       </View>
     </ScrollView>

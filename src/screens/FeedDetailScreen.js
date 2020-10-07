@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import FeedDetail from '../components/FeedDetail';
 import {
   Layout,
@@ -7,6 +7,7 @@ import {
   TopNavigationAction,
   Icon,
 } from '@ui-kitten/components';
+import MySafeAreaView from '../components/MySafeAreaView';
 
 const FeedDetailScreen = ({route, navigation}) => {
   const {result} = route.params;
@@ -21,7 +22,7 @@ const FeedDetailScreen = ({route, navigation}) => {
 
   return (
     <Layout style={{flex: 1}}>
-      <SafeAreaView>
+      <MySafeAreaView>
         <TopNavigation
           title="FeedList"
           alignment="center"
@@ -30,7 +31,7 @@ const FeedDetailScreen = ({route, navigation}) => {
         <View style={styles.description}>
           <FeedDetail result={result} />
         </View>
-      </SafeAreaView>
+      </MySafeAreaView>
     </Layout>
   );
 };
