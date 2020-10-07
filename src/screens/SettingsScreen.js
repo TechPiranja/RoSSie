@@ -6,6 +6,7 @@ import BottomNavBar from '../components/BottomNavBar';
 import {ScrollView} from 'react-native-gesture-handler';
 import FeedFetcher from '../services/FeedFetcher';
 import Toast from 'react-native-tiny-toast';
+import MySafeAreaView from '../components/MySafeAreaView';
 
 const SettingsScreen = ({navigation}) => {
   const [checkedOfflineMode, setCheckedOfflineMode] = React.useState(false);
@@ -22,7 +23,7 @@ const SettingsScreen = ({navigation}) => {
 
   return (
     <Layout style={{flex: 1}}>
-      <SafeAreaView style={styles.container}>
+      <MySafeAreaView style={styles.container}>
         <TopNavigation title="Settings" alignment="center" />
         <ScrollView style={styles.innerContainer}>
           <Text style={{margin: 10, marginTop: 20}}>Storage</Text>
@@ -88,7 +89,7 @@ const SettingsScreen = ({navigation}) => {
         </ScrollView>
 
         <BottomNavBar index={2} navigation={navigation} />
-      </SafeAreaView>
+      </MySafeAreaView>
     </Layout>
   );
 };

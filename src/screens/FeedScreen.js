@@ -2,7 +2,14 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {RefreshControl, StyleSheet, SafeAreaView, Text} from 'react-native';
+import MySafeAreaView from '../components/MySafeAreaView';
+import {
+  RefreshControl,
+  StyleSheet,
+  Text,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
 import FeedOverview from '../components/FeedOverview';
@@ -87,40 +94,42 @@ const FeedScreen = ({navigation}) => {
   //registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
   return (
-    <Layout style={{flex: 1}}>
-      <SafeAreaView style={styles.container}>
-        <TopNavigation title="Feed" alignment="center" />
-        {feed?.length == 0 ? (
-          fetching ? (
-            <Layout style={styles.centered}>
-              <Spinner size="giant" />
-              <Text style={{color: '#999', margin: 10}}>Loading</Text>
-            </Layout>
-          ) : (
-            <EmptyPlaceholder
-              firstText="No feed link provided"
-              secondText="Please add a link inside the FeedList Menu"
-            />
-          )
+    <MySafeAreaView>
+      <TopNavigation title="Feed" alignment="center" />
+      {feed?.length == 0 ? (
+        fetching ? (
+          <Layout style={styles.centered}>
+            <Spinner size="giant" />
+            <Text style={{color: '#999', margin: 10}}>Loading</Text>
+          </Layout>
         ) : (
-          <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
-            }
-            data={feed}
-            renderItem={({item}) => {
-              return <FeedOverview result={item} navigation={navigation} />;
-            }}
-            keyExtractor={(_item, index) => index.toString()}
+          <EmptyPlaceholder
+            firstText="No feed link provided"
+            secondText="Please add a link inside the FeedList Menu"
           />
-        )}
-        <BottomNavBar index={1} navigation={navigation} />
-      </SafeAreaView>
-    </Layout>
+        )
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+          }
+          data={feed}
+          renderItem={({item}) => {
+            return <FeedOverview result={item} navigation={navigation} />;
+          }}
+          keyExtractor={(_item, index) => index.toString()}
+        />
+      )}
+      <BottomNavBar index={1} navigation={navigation} />
+    </MySafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  androidSafeView: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
   centered: {
     display: 'flex',
     flex: 1,
