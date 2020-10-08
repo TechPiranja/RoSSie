@@ -10,6 +10,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {default as theme} from './custom-theme.json';
+import SplashScreen from 'react-native-splash-screen';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -42,17 +43,20 @@ const HomeNavigator = () => (
     />
   </Navigator>
 );
-const App = () => {
-  return (
-    <>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={{...eva.light, ...theme}}>
-        <NavigationContainer>
-          <HomeNavigator />
-        </NavigationContainer>
-      </ApplicationProvider>
-    </>
-  );
-};
-
-export default App;
+export default class App extends React.Component {
+  componentDidMount() {
+    SplashScreen.hide();
+  }
+  render() {
+    return (
+      <>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={{...eva.light, ...theme}}>
+          <NavigationContainer>
+            <HomeNavigator />
+          </NavigationContainer>
+        </ApplicationProvider>
+      </>
+    );
+  }
+}
