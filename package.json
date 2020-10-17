@@ -1,6 +1,6 @@
 {
   "name": "RoSSie",
-  "version": "0.0.1",
+  "version": "1.0.10",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -25,6 +25,7 @@
     "react-native-render-html": "^4.2.4",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
+    "react-native-splash-screen": "3.0.6",
     "react-native-svg": "^12.1.0",
     "react-native-swipe-list-view": "^3.2.4",
     "react-native-tiny-toast": "^1.0.7",
