@@ -238,6 +238,8 @@ PODS:
   - React-jsinspector (0.63.3)
   - react-native-safe-area-context (3.1.8):
     - React-Core
+  - react-native-splash-screen (3.2.0):
+    - React
   - react-native-webview (10.9.2):
     - React-Core
   - React-RCTActionSheet (0.63.3):
@@ -356,6 +358,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -424,6 +427,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -491,6 +496,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 4e96d493f9f90ba4f03b28933f30b2964df07e39
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
@@ -512,6 +518,6 @@ SPEC CHECKSUMS:
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 82f4620c8f6aa1e1e0935d972a18cb0747fc407e
+PODFILE CHECKSUM: b7a8dd51cc288c31fd73daf70b74603bce2e73fb
 
 COCOAPODS: 1.9.3

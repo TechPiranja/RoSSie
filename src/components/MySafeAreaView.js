@@ -14,7 +14,10 @@ const MySafeAreaView = ({children}) => {
             flexDirection: 'column',
             justifyContent: 'space-between',
           }}>
-          {children}
+          <>
+            <StatusBar barStyle="dark-content" translucent />
+            {children}
+          </>
         </SafeAreaView>
       </Layout>
     );
@@ -24,7 +27,7 @@ const MySafeAreaView = ({children}) => {
       <Layout style={{flex: 1, paddingTop: StatusBar.currentHeight}}>
         <StatusBar
           translucent
-          barStyle="light-content"
+          barStyle="dark-content"
           backgroundColor="rgba(0, 0, 0, 0.251)"
         />
         {children}
