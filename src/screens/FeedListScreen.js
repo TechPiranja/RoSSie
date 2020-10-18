@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import BottomNavBar from '../components/BottomNavBar';
 import {
@@ -87,7 +87,7 @@ const FeedListScreen = ({navigation}) => {
           alignment="center"
           accessoryRight={BackAction}
         />
-        <View style={styles.innerContainer}>
+        <KeyboardAvoidingView behavior={'height'} style={styles.innerContainer}>
           <Toast
             visible={visibleToast}
             position={0}
@@ -113,7 +113,7 @@ const FeedListScreen = ({navigation}) => {
               changeFeedLink={changeFeedLink}
             />
           )}
-        </View>
+        </KeyboardAvoidingView>
         <BottomNavBar
           index={0}
           navigation={navigation}

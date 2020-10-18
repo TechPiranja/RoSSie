@@ -1,6 +1,12 @@
-import {Button, Card, Modal, Text} from '@ui-kitten/components';
+import {Button, Card, Text} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Modal,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
 const FeedListModal = ({visible, onBackdropPress, save}) => {
@@ -17,40 +23,51 @@ const FeedListModal = ({visible, onBackdropPress, save}) => {
 
   return (
     <Modal
-      style={styles.container}
-      width="80%"
       visible={visible}
-      backdropStyle={styles.backdrop}
-      onBackdropPress={onBackdropPress}>
-      <Card disabled={true}>
-        <Text style={styles.label}>Feed Name:</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="My Feed"
-          onChangeText={(text) => setFeedName(text)}
-          value={FeedName}
-        />
-        <Text style={styles.label}>Feedlink:</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="https://www.FeedLink.xml"
-          onChangeText={(text) => setFeedLink(text)}
-          value={FeedLink}
-        />
-        <Button
-          appearance="ghost"
-          style={styles.buttons}
-          onPress={() => saveInput()}>
-          Add Feed
-        </Button>
-      </Card>
+      animationType={'fade'}
+      transparent={true}
+      onRequestClose={onBackdropPress}>
+      <KeyboardAvoidingView style={styles.container}>
+        <TouchableWithoutFeedback onPress={onBackdropPress}>
+          <View style={styles.viewContainer}>
+            <Card disabled={true}>
+              <Text style={styles.label}>Feed Name:</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="My Feed"
+                onChangeText={(text) => setFeedName(text)}
+                value={FeedName}
+              />
+              <Text style={styles.label}>Feedlink:</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="https://www.FeedLink.xml"
+                onChangeText={(text) => setFeedLink(text)}
+                value={FeedLink}
+              />
+              <Button
+                appearance="ghost"
+                style={styles.buttons}
+                onPress={() => saveInput()}>
+                Add Feed
+              </Button>
+            </Card>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  viewContainer: {flex: 1, justifyContent: 'center', padding: 5},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
   label: {
-    marginTop: 15,
+    marginTop: 5,
     marginBottom: 5,
   },
   textInput: {
