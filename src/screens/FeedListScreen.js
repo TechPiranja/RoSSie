@@ -88,14 +88,6 @@ const FeedListScreen = ({navigation}) => {
           accessoryRight={BackAction}
         />
         <KeyboardAvoidingView behavior={'height'} style={styles.innerContainer}>
-          <Toast
-            visible={visibleToast}
-            position={0}
-            onHidden={() => {
-              // onHidden
-            }}>
-            This is a message
-          </Toast>
           <FeedListModal
             visible={visibleModal}
             onBackdropPress={() => setVisibleModal(false)}

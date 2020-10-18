@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import FeedDetail from '../components/FeedDetail';
