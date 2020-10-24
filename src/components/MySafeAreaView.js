@@ -1,4 +1,4 @@
-import {Layout, withStyles} from '@ui-kitten/components';
+import {Layout} from '@ui-kitten/components';
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Platform, StatusBar} from 'react-native';
