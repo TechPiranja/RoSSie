@@ -1,4 +1,4 @@
-package com.rossie;
+package com.techpiranja.RoSSie;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen; // import this
