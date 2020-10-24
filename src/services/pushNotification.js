@@ -1,11 +1,11 @@
-import { Notifications } from 'expo';
+import {Notifications} from 'expo';
 import * as Permissions from 'expo-permissions';
 import Fire from './Fire';
 
 const PUSH_ENDPOINT = 'https://rossie-ef094.firebaseio.com';
 
 export async function registerForPushNotificationsAsync() {
-  const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+  const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
   if (status !== 'granted') {
     alert('No notification permissions!');
     return;
@@ -17,15 +17,15 @@ export async function registerForPushNotificationsAsync() {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       token: {
-        value: token
+        value: token,
       },
       user: {
-        username: 'Brent'
-      }
-    })
+        username: 'Brent',
+      },
+    }),
   });
 }
