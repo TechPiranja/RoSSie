@@ -11,6 +11,8 @@ target 'RoSSie' do
 
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'RoSSieTests' do
     inherit! :complete
     # Pods for testing
