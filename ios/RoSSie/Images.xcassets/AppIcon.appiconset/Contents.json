@@ -1,62 +1,38 @@
 {
   "images" : [
     {
-      "filename" : "icon Kopie-8.png",
       "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "20x20"
+      "size" : "29x29",
+      "scale" : "2x"
     },
     {
-      "filename" : "icon Kopie-6.png",
       "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "20x20"
+      "size" : "29x29",
+      "scale" : "3x"
     },
     {
-      "filename" : "icon Kopie-7.png",
       "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "29x29"
+      "size" : "40x40",
+      "scale" : "2x"
     },
     {
-      "filename" : "icon Kopie-4.png",
       "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "29x29"
+      "size" : "40x40",
+      "scale" : "3x"
     },
     {
-      "filename" : "icon Kopie-5.png",
       "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "40x40"
+      "size" : "60x60",
+      "scale" : "2x"
     },
     {
-      "filename" : "icon Kopie-3.png",
       "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "icon Kopie-2.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "icon Kopie-1.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "icon Kopie.png",
-      "idiom" : "ios-marketing",
-      "scale" : "1x",
-      "size" : "1024x1024"
+      "size" : "60x60",
+      "scale" : "3x"
     }
   ],
   "info" : {
-    "author" : "xcode",
-    "version" : 1
+    "version" : 1,
+    "author" : "xcode"
   }
 }
