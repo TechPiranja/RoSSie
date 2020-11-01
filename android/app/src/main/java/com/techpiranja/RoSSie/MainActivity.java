@@ -1,8 +1,8 @@
 package com.techpiranja.RoSSie;
 
 import com.facebook.react.ReactActivity;
-import org.devio.rn.splashscreen.SplashScreen; // import this
-import android.os.Bundle; // import this
+import org.devio.rn.splashscreen.SplashScreen; // Import this.
+import android.os.Bundle; // Import this.
 
 public class MainActivity extends ReactActivity {
 
@@ -15,9 +15,10 @@ public class MainActivity extends ReactActivity {
     return "RoSSie";
   }
 
-   @Override
+   // Add this method.
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.show(this);  // here
+        SplashScreen.show(this);
         super.onCreate(savedInstanceState);
     }
 }

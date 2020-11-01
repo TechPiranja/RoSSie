@@ -7,11 +7,6 @@ target 'RoSSie' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
-
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
   target 'RoSSieTests' do
     inherit! :complete
