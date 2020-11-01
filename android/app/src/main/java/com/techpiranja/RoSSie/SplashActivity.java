@@ -1,4 +1,4 @@
-package com.techpiranja.RoSSie; // make sure this is your package name
+package com.techpiranja.RoSSie; // Change this to your package name.
 
 import android.content.Intent;
 import android.os.Bundle;
