@@ -16,7 +16,11 @@ const FeedDetail = ({result}) => {
       <View style={styles.bottomContainer}>
         <Text style={styles.time}>Time: {result.time} </Text>
         <TouchableOpacity
-          onPress={() => Linking.openURL(result.link.toString())}>
+          hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+          onPress={() => {
+            Linking.openURL(result.link.toString());
+            console.log('test');
+          }}>
           <Icon name="external-link" style={styles.iconStyle} />
         </TouchableOpacity>
       </View>
@@ -38,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   iconStyle: {
-    fontSize: 25,
+    fontSize: 30,
     color: '#5e92f3',
     position: 'absolute',
     bottom: 0,
@@ -46,6 +50,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     marginTop: 50,
+    marginRight: 5,
   },
 });
 
