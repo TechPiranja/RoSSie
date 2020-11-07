@@ -132,8 +132,8 @@ android {
         applicationId "com.techpiranja.RoSSie"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3145734
-        versionName "1.0.13"
+        versionCode 3145735
+        versionName "1.0.14"
     }
     splits {
         abi {
