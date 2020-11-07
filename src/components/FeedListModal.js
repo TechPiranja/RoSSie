@@ -6,6 +6,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   View,
+  Platform,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 
@@ -27,7 +28,9 @@ const FeedListModal = ({visible, onBackdropPress, save}) => {
       animationType={'fade'}
       transparent={true}
       onRequestClose={onBackdropPress}>
-      <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <TouchableWithoutFeedback onPress={onBackdropPress}>
           <View style={styles.viewContainer}>
             <Card disabled={true}>
@@ -35,6 +38,7 @@ const FeedListModal = ({visible, onBackdropPress, save}) => {
               <TextInput
                 style={styles.textInput}
                 placeholder="My Feed"
+                placeholderTextColor="grey"
                 onChangeText={(text) => setFeedName(text)}
                 value={FeedName}
               />
@@ -42,6 +46,7 @@ const FeedListModal = ({visible, onBackdropPress, save}) => {
               <TextInput
                 style={styles.textInput}
                 placeholder="https://www.FeedLink.xml"
+                placeholderTextColor="grey"
                 onChangeText={(text) => setFeedLink(text)}
                 value={FeedLink}
               />
@@ -60,10 +65,15 @@ const FeedListModal = ({visible, onBackdropPress, save}) => {
 };
 
 const styles = StyleSheet.create({
-  viewContainer: {flex: 1, justifyContent: 'center', padding: 5},
-  container: {
+  viewContainer: {
     flex: 1,
     justifyContent: 'center',
+    padding: 5,
+    margin: 10,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   label: {
@@ -75,6 +85,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
+    height: 40,
+    marginBottom: 5,
     textAlign: 'center',
     backgroundColor: '#eee',
   },
