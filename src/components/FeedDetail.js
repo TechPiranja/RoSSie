@@ -5,6 +5,7 @@ import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/Feather';
 
 const FeedDetail = ({result}) => {
+  Icon.loadFont();
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{result.title}</Text>
@@ -31,6 +32,7 @@ const FeedDetail = ({result}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
+    top: 0,
   },
   time: {
     position: 'absolute',
