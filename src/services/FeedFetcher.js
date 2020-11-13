@@ -76,14 +76,14 @@ class FeedFetcher {
   loadXmlToFeed = async (value, isReload, feed) => {
     let tempArr = [];
     let rssData = [];
-    var parseString = require('react-native-xml2js').parseString;
+    let parseString = require('react-native-xml2js').parseString;
     parseString(value.data, function (_err, result) {
-      var obj = JSON.stringify(result);
+      let obj = JSON.stringify(result);
       if (obj === undefined) {
         console.log('data was undefined!');
         return;
       }
-      var data = JSON.parse(obj);
+      let data = JSON.parse(obj);
       data.rss.channel[0].item.forEach((element) => {
         let x = {
           title: element.title[0],

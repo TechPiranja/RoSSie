@@ -27,10 +27,6 @@ const FeedListScreen = ({navigation}) => {
 
   useEffect(() => {
     loadFeedListFromStorage();
-  }, []);
-
-  useEffect(() => {
-    loadFeedListFromStorage();
   }, [isFocused]);
 
   async function loadFeedListFromStorage() {
