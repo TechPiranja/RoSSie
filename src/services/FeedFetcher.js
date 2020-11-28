@@ -8,6 +8,11 @@ class FeedFetcher {
     return JSON.parse(currentFeedLink);
   };
 
+  getCurrentFeedName = async () => {
+    let currentFeedName = await AsyncStorage.getItem('CurrentFeedName');
+    return JSON.parse(currentFeedName);
+  };
+
   fetchData = async () => {
     let currentFeedLink = await this.getCurrentFeedLink();
     const response = await axios
@@ -25,8 +30,9 @@ class FeedFetcher {
     }
   };
 
-  changeFeedLink = async (value) => {
-    this.save('CurrentFeedLink', value);
+  changeFeedLink = async (link, name) => {
+    this.save('CurrentFeedLink', link);
+    this.save('CurrentFeedName', name);
   };
 
   clearAppData = async function () {

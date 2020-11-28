@@ -132,8 +132,8 @@ android {
         applicationId "com.techpiranja.RoSSie"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3145734
-        versionName "1.0.13"
+        versionCode 3145735
+        versionName "1.0.14"
     }
     splits {
         abi {
@@ -225,3 +225,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

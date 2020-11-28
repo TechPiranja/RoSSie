@@ -28,7 +28,7 @@ const FeedList = ({feedList, setFeedList, changeFeedLink}) => {
             <Button
               style={styles.btn}
               appearance="ghost"
-              onPress={() => changeFeedLink(item.link)}>
+              onPress={() => changeFeedLink(item.link, item.name)}>
               {item.name}
             </Button>
           </View>

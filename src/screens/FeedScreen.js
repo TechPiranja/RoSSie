@@ -3,13 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import MySafeAreaView from '../components/MySafeAreaView';
-import {
-  RefreshControl,
-  StyleSheet,
-  Text,
-  Platform,
-  StatusBar,
-} from 'react-native';
+import {RefreshControl, StyleSheet, Text} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
 import FeedOverview from '../components/FeedOverview';
@@ -23,6 +17,7 @@ import EmptyPlaceholder from '../components/EmptyPlaceholder';
 const FeedScreen = ({navigation}) => {
   const [feed, setFeed] = useState([]);
   const [loadedFeedLink, setLoadedFeedLink] = useState('');
+  const [loadedFeedName, setLoadedFeedName] = useState('Feed');
   const [refreshing, setRefreshing] = useState(false);
   const [fetching, setFetching] = useState(false);
   const isFocused = useIsFocused();
@@ -37,16 +32,22 @@ const FeedScreen = ({navigation}) => {
   useEffect(() => {
     async function hasFeedLinkChanged() {
       let currentLink = await FeedFetcher.getCurrentFeedLink();
-      console.log(currentLink);
-      console.log(loadedFeedLink);
+      let currentName = await FeedFetcher.getCurrentFeedName();
+      console.log('Loaded Feed Name: ' + loadedFeedName);
+
       if (currentLink == '' || currentLink == null) {
         setFeed([]);
         setLoadedFeedLink(null);
+        setLoadedFeedName('Feed');
       } else if (!Validator.validURL(currentLink)) {
         return;
-      } else if (loadedFeedLink !== currentLink) {
+      } else if (
+        loadedFeedLink !== currentLink ||
+        currentName !== loadedFeedName
+      ) {
         load();
         setLoadedFeedLink(currentLink);
+        setLoadedFeedName(currentName);
       }
     }
     hasFeedLinkChanged();
@@ -91,11 +92,16 @@ const FeedScreen = ({navigation}) => {
     setFetching(false);
   };
 
+  const saveIsRead = async () => {
+    FeedFetcher.save('FeedData' + loadedFeedLink, feed);
+    console.log('Save is read');
+  };
+
   //registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
   return (
     <MySafeAreaView>
-      <TopNavigation title="Feed" alignment="center" />
+      <TopNavigation title={loadedFeedName} alignment="center" />
       {feed?.length == 0 ? (
         fetching ? (
           <Layout style={styles.centered}>
@@ -117,7 +123,13 @@ const FeedScreen = ({navigation}) => {
           }
           data={feed}
           renderItem={({item}) => {
-            return <FeedOverview result={item} navigation={navigation} />;
+            return (
+              <FeedOverview
+                result={item}
+                navigation={navigation}
+                saveIsRead={saveIsRead}
+              />
+            );
           }}
           keyExtractor={(_item, index) => index.toString()}
         />

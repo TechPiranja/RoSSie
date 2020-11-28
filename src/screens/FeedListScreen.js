@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {StyleSheet, KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import BottomNavBar from '../components/BottomNavBar';
 import {
@@ -15,19 +15,16 @@ import EmptyPlaceholder from '../components/EmptyPlaceholder';
 import FeedList from '../components/FeedList';
 import FeedListModal from '../components/FeedListModal';
 import FeedFetcher from '../services/FeedFetcher';
-import {useIsFocused} from '@react-navigation/native';
 import Toast from 'react-native-tiny-toast';
 import MySafeAreaView from '../components/MySafeAreaView';
 
 const FeedListScreen = ({navigation}) => {
   const [feedList, setFeedList] = useState([]);
   const [visibleModal, setVisibleModal] = React.useState(false);
-  const [visibleToast] = React.useState(false);
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     loadFeedListFromStorage();
-  }, [isFocused]);
+  }, []);
 
   async function loadFeedListFromStorage() {
     let feedListFromStorage = await FeedFetcher.loadFeedListFromStorage();
@@ -66,8 +63,9 @@ const FeedListScreen = ({navigation}) => {
     setFeedList(() => feedList.filter((_x, index) => index != indexToDelete));
   };
 
-  const changeFeedLink = (item) => {
-    FeedFetcher.changeFeedLink(item);
+  const changeFeedLink = (item, name) => {
+    console.log('Changing to', item, 'with name:', name);
+    FeedFetcher.changeFeedLink(item, name);
     navigation.navigate('Feed');
     Toast.showSuccess('Changed current Feedlink!', {
       position: Toast.position.CENTER,
