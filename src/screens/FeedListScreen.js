@@ -17,6 +17,7 @@ import FeedListModal from '../components/FeedListModal';
 import FeedFetcher from '../services/FeedFetcher';
 import Toast from 'react-native-tiny-toast';
 import MySafeAreaView from '../components/MySafeAreaView';
+import ThemeSelector from '../services/ThemeSelector';
 
 const FeedListScreen = ({navigation}) => {
   const [feedList, setFeedList] = useState([]);
@@ -73,6 +74,8 @@ const FeedListScreen = ({navigation}) => {
     });
   };
 
+
+  const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
   return (
     <Layout style={{flex: 1}}>
       <MySafeAreaView style={styles.description}>
@@ -110,7 +113,7 @@ const FeedListScreen = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
+const lightStyles = StyleSheet.create({
   description: {
     flex: 1,
     flexDirection: 'column',
@@ -121,6 +124,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     backgroundColor: '#eee',
+  },
+});
+
+const darkStyles = StyleSheet.create({
+  description: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  innerContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    backgroundColor: '#222b44',
   },
 });
 
