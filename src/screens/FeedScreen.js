@@ -3,13 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import MySafeAreaView from '../components/MySafeAreaView';
-import {
-  RefreshControl,
-  StyleSheet,
-  Text,
-  Platform,
-  StatusBar,
-} from 'react-native';
+import {RefreshControl, StyleSheet, Text} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
 import FeedOverview from '../components/FeedOverview';
@@ -98,6 +92,11 @@ const FeedScreen = ({navigation}) => {
     setFetching(false);
   };
 
+  const saveIsRead = async () => {
+    FeedFetcher.save('FeedData' + loadedFeedLink, feed);
+    console.log('Save is read');
+  };
+
   //registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
   return (
@@ -124,9 +123,13 @@ const FeedScreen = ({navigation}) => {
           }
           data={feed}
           renderItem={({item}) => {
-            let result = JSON.parse(JSON.stringify(item)); // Create copy
-            result.feedName = loadedFeedName;
-            return <FeedOverview result={result} navigation={navigation} />;
+            return (
+              <FeedOverview
+                result={item}
+                navigation={navigation}
+                saveIsRead={saveIsRead}
+              />
+            );
           }}
           keyExtractor={(_item, index) => index.toString()}
         />

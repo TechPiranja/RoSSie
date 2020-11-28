@@ -1,13 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const FeedOverview = ({ result, navigation }) => {
+const FeedOverview = ({result, navigation, saveIsRead}) => {
+  const ReadFeed = () => {
+    result.isRead = true;
+    saveIsRead();
+    navigation.navigate('FeedDetail', {result: result});
+  };
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('FeedDetail', { result: result })}>
+    <View
+      // eslint-disable-next-line prettier/prettier
+      style={[ styles.container, result.isRead ? styles.isRead : styles.isUnread]}>
+      <TouchableOpacity onPress={ReadFeed}>
         <Text>{result.title}</Text>
-        {result.time ? <Text style={styles.time}>Time: {result.time} </Text> : null}
+        {result.time ? (
+          <Text style={styles.time}>Time: {result.time} </Text>
+        ) : null}
       </TouchableOpacity>
     </View>
   );
@@ -19,6 +28,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: '#ccc',
     borderWidth: 0.5,
+  },
+  isUnread: {
+    backgroundColor: '#FFFFFF',
+  },
+  isRead: {
+    backgroundColor: '#ddd',
   },
   time: {
     color: 'gray',
