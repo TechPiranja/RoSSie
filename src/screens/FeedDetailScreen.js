@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import FeedDetail from '../components/FeedDetail';
 import {
   Layout,
@@ -9,9 +9,10 @@ import {
   Icon,
 } from '@ui-kitten/components';
 import MySafeAreaView from '../components/MySafeAreaView';
+import ThemeSelector from '../services/ThemeSelector';
 
-const FeedDetailScreen = ({route, navigation}) => {
-  const {result} = route.params;
+const FeedDetailScreen = ({ route, navigation }) => {
+  const { result } = route.params;
 
   const BackIcon = (props) => <Icon {...props} name="arrow-back" />;
   const BackAction = () => (
@@ -22,7 +23,7 @@ const FeedDetailScreen = ({route, navigation}) => {
   );
 
   return (
-    <Layout style={{flex: 1}}>
+    <Layout style={{ flex: 1 }}>
       <MySafeAreaView>
         <TopNavigation
           title={result.feedName}
@@ -39,12 +40,7 @@ const FeedDetailScreen = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   description: {
-    backgroundColor: '#ddd',
-    margin: 10,
-  },
-  time: {
-    color: 'gray',
+    margin: 0,
   },
 });
-
 export default FeedDetailScreen;
