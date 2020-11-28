@@ -3,8 +3,6 @@ import { View, TouchableOpacity, Text, StyleSheet, Linking } from 'react-native'
 import { ScrollView, Dimensions } from 'react-native';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/Feather';
-import MySafeAreaView from './MySafeAreaView';
-import { TopNavigation } from '@ui-kitten/components';
 
 const FeedDetail = ({ result }) => {
   Icon.loadFont();
