@@ -1,10 +1,12 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Linking} from 'react-native';
-import {ScrollView, Dimensions} from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Linking } from 'react-native';
+import { ScrollView, Dimensions } from 'react-native';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/Feather';
+import MySafeAreaView from './MySafeAreaView';
+import { TopNavigation } from '@ui-kitten/components';
 
-const FeedDetail = ({result}) => {
+const FeedDetail = ({ result }) => {
   Icon.loadFont();
   return (
     <ScrollView style={styles.container}>
@@ -15,9 +17,9 @@ const FeedDetail = ({result}) => {
         onLinkPress={(_event, url) => Linking.openURL(url)}
       />
       <View style={styles.bottomContainer}>
-        <Text style={styles.time}>Time: {result.time} </Text>
+        {result.time ? <Text style={styles.time}>Time: {result.time} </Text> : null}
         <TouchableOpacity
-          hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
           onPress={() => {
             Linking.openURL(result.link.toString());
             console.log('test');

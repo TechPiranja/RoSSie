@@ -25,7 +25,7 @@ const FeedDetailScreen = ({route, navigation}) => {
     <Layout style={{flex: 1}}>
       <MySafeAreaView>
         <TopNavigation
-          title="FeedList"
+          title={result.feedName}
           alignment="center"
           accessoryLeft={BackAction}
         />
