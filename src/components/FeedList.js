@@ -16,7 +16,12 @@ const deleteFeedItem = async (data, feedList, setFeedList) => {
   await FeedFetcher.removeFeed(link);
 };
 
-const FeedList = ({ feedList, setFeedList, changeFeedLink }) => {
+const editFeedItem = async (data, feedList, editItem) => {
+  let indexToEdit = feedList.indexOf(data.item);
+  editItem(indexToEdit);
+};
+
+const FeedList = ({ feedList, setFeedList, changeFeedLink, editItem }) => {
   const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
   return (
     <SwipeListView
@@ -38,6 +43,13 @@ const FeedList = ({ feedList, setFeedList, changeFeedLink }) => {
       }}
       renderHiddenItem={(data) => (
         <View style={styles.rowBack}>
+          <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+            <TouchableOpacity
+              onPress={() => editFeedItem(data, feedList, editItem)}
+              style={styles.backText}>
+              <Text style={styles.backRightBtnLeftText}>Edit</Text>
+            </TouchableOpacity>
+          </View>
           <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
             <TouchableOpacity
               onPress={() => deleteFeedItem(data, feedList, setFeedList)}
@@ -47,8 +59,9 @@ const FeedList = ({ feedList, setFeedList, changeFeedLink }) => {
           </View>
         </View>
       )}
-      rightOpenValue={-100}
+      rightOpenValue={-175}
       keyExtractor={(_item, index) => index.toString()}
+      swipeToOpenVelocityContribution={5}
     />
   );
 };
@@ -67,15 +80,23 @@ const lightStylesProto = {
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 100,
   },
   backRightBtnRight: {
     backgroundColor: '#d33',
     right: 0,
+    width: 100,
+  },
+  backRightBtnLeft: {
+    backgroundColor: '#eee',
+    right: 100,
+    width: 75,
+  },
+  backRightBtnLeftText: {
+    color: '#000',
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: '#d33',
+    backgroundColor: '#eee',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -91,13 +112,18 @@ const darkStylesProto = {
     backgroundColor: '#222b44',
     borderRadius: 0,
   },
-  backRightBtnRight: {
-    backgroundColor: '#f00',
-    right: 0,
+  backRightBtnLeft: {
+    backgroundColor: '#192033',
+    right: 100,
+    width: 75,
+    color: '#fff',
+  },
+  backRightBtnLeftText: {
+    color: '#fff',
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: '#f00',
+    backgroundColor: '#192033',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
