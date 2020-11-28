@@ -7,7 +7,9 @@ import ThemeSelector from '../services/ThemeSelector';
 
 const FeedDetail = ({result}) => {
   const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
-  const htmlStyles = ThemeSelector.getDarkModeEnabled() ? darkHTMLStyles : lightHTMLStyles;
+  const htmlStyles = ThemeSelector.getDarkModeEnabled()
+    ? darkHTMLStyles
+    : lightHTMLStyles;
 
   let text = result.description.trim();
   console.log('text:', text);
@@ -15,7 +17,7 @@ const FeedDetail = ({result}) => {
   Icon.loadFont();
   return (
     <ScrollView style={styles.container}>
-      <View style={{ margin: 10 }}>
+      <View style={{margin: 10}}>
         <Text style={styles.title}>{result.title}</Text>
         <HTML
           html={text}
@@ -26,9 +28,11 @@ const FeedDetail = ({result}) => {
           baseFontStyle={htmlStyles.baseFontStyle}
         />
         <View style={styles.bottomContainer}>
-          {result.time ? <Text style={styles.time}>Time: {result.time} </Text> : null}
+          {result.time ? (
+            <Text style={styles.time}>Time: {result.time} </Text>
+          ) : null}
           <TouchableOpacity
-            hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+            hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
             onPress={() => {
               Linking.openURL(result.link.toString());
               console.log('test');
@@ -78,10 +82,13 @@ const darkStylesProto = {
     fontWeight: 'bold',
     marginBottom: 10,
   },
-}
+};
 
 const lightStyles = StyleSheet.create(lightStylesProto);
-const darkStyles = StyleSheet.flatten([lightStyles, StyleSheet.create(darkStylesProto)]);
+const darkStyles = StyleSheet.flatten([
+  lightStyles,
+  StyleSheet.create(darkStylesProto),
+]);
 
 const lightHTMLStyles = {
   tagsStyles: {
@@ -94,11 +101,9 @@ const lightHTMLStyles = {
     blockquote: {
       marginHorizontal: 25,
       marginVertical: 10,
-    }
+    },
   },
-  classesStyles: {
-
-  },
+  classesStyles: {},
   baseFontStyle: {
     color: '#000',
   },
@@ -114,15 +119,12 @@ const darkHTMLStyles = {
     blockquote: {
       marginHorizontal: 25,
       marginVertical: 10,
-    }
+    },
   },
-  classesStyles: {
-
-  },
+  classesStyles: {},
   baseFontStyle: {
     color: '#fff',
   },
 };
-
 
 export default FeedDetail;

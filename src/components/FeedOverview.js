@@ -15,7 +15,9 @@ const FeedOverview = ({result, navigation, saveIsRead}) => {
       // eslint-disable-next-line prettier/prettier
       style={[ styles.container, result.isRead ? styles.isRead : styles.isUnread]}>
       <TouchableOpacity onPress={ReadFeed}>
-        <Text style={result.isRead ? styles.isRead : styles.isUnread}>{result.title}</Text>
+        <Text style={result.isRead ? styles.isRead : styles.isUnread}>
+          {result.title}
+        </Text>
         {result.time ? (
           <Text style={styles.time}>Time: {result.time} </Text>
         ) : null}
@@ -43,7 +45,7 @@ const lightStyles = StyleSheet.create({
   },
   isRead: {
     backgroundColor: '#ddd',
-    color: '#444'
+    color: '#444',
   },
 });
 
@@ -62,11 +64,11 @@ const darkStyles = StyleSheet.create({
   },
   isUnread: {
     backgroundColor: '#192033',
-    color: '#fff'
+    color: '#fff',
   },
   isRead: {
     backgroundColor: '#222b44',
-    color: '#aaa'
+    color: '#aaa',
   },
 });
 

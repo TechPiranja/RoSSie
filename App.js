@@ -1,20 +1,20 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import * as eva from '@eva-design/eva';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import FeedScreen from './src/screens/FeedScreen';
 import FeedListScreen from './src/screens/FeedListScreen';
 import FeedDetailScreen from './src/screens/FeedDetailScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
-import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { default as theme } from './custom-theme.json';
+import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
+import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import {default as theme} from './custom-theme.json';
 import SplashScreen from 'react-native-splash-screen';
-import { ThemeContext } from './theme-context';
+import {ThemeContext} from './theme-context';
 import ThemeSelector from './src/services/ThemeSelector';
 
-const { Navigator, Screen } = createStackNavigator();
+const {Navigator, Screen} = createStackNavigator();
 
 const HomeNavigator = () => (
   <Navigator headerMode="none">
@@ -56,14 +56,14 @@ export default class App extends React.Component {
 
   setTheme = (darkMode) => {
     if (darkMode === true) {
-      this.setState({ selectedTheme: 'dark' });
+      this.setState({selectedTheme: 'dark'});
     } else {
-      this.setState({ selectedTheme: 'light' });
+      this.setState({selectedTheme: 'light'});
     }
   };
 
   componentDidMount() {
-    ThemeSelector.loadDarkModeEnabled().then(e => {
+    ThemeSelector.loadDarkModeEnabled().then((e) => {
       this.setTheme(e);
       SplashScreen.hide();
     });
@@ -73,8 +73,11 @@ export default class App extends React.Component {
     return (
       <>
         <IconRegistry icons={EvaIconsPack} />
-        <ThemeContext.Provider value={{ t: this.state.selectedTheme, set: this.setTheme }}>
-          <ApplicationProvider {...eva} theme={{ ...eva[this.state.selectedTheme], ...theme }}>
+        <ThemeContext.Provider
+          value={{t: this.state.selectedTheme, set: this.setTheme}}>
+          <ApplicationProvider
+            {...eva}
+            theme={{...eva[this.state.selectedTheme], ...theme}}>
             <NavigationContainer>
               <HomeNavigator />
             </NavigationContainer>
