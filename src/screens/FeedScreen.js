@@ -19,6 +19,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {TopNavigation, Layout, Spinner} from '@ui-kitten/components';
 import Validator from '../services/Validation';
 import EmptyPlaceholder from '../components/EmptyPlaceholder';
+import ThemeSelector from '../services/ThemeSelector';
 
 const FeedScreen = ({navigation}) => {
   const [feed, setFeed] = useState([]);
@@ -96,6 +97,7 @@ const FeedScreen = ({navigation}) => {
 
   //registerForPushNotificationsAsync(); <Button title="Delete Feed" onPress={() => setFeed((oldArray) => [])} />
 
+  const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
   return (
     <MySafeAreaView>
       <TopNavigation title={loadedFeedName} alignment="center" />
@@ -132,7 +134,7 @@ const FeedScreen = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
+const lightStylesProto = {
   centered: {
     display: 'flex',
     flex: 1,
@@ -145,6 +147,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-});
+};
+const darkStylesProto = {
+  centered: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#222b44',
+  },
+};
+
+const lightStyles = StyleSheet.create(lightStylesProto);
+const darkStyles = StyleSheet.flatten([lightStyles, StyleSheet.create(darkStylesProto)]);
 
 export default FeedScreen;

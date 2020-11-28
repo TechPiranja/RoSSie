@@ -1,8 +1,9 @@
-import {Divider, Button} from '@ui-kitten/components';
+import { Divider, Button } from '@ui-kitten/components';
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {SwipeListView} from 'react-native-swipe-list-view';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import FeedFetcher from '../services/FeedFetcher';
+import ThemeSelector from '../services/ThemeSelector';
 
 const deleteFeedItem = async (data, feedList, setFeedList) => {
   let indexToDelete = feedList.indexOf(data.item);
@@ -15,13 +16,14 @@ const deleteFeedItem = async (data, feedList, setFeedList) => {
   await FeedFetcher.removeFeed(link);
 };
 
-const FeedList = ({feedList, setFeedList, changeFeedLink}) => {
+const FeedList = ({ feedList, setFeedList, changeFeedLink }) => {
+  const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
   return (
     <SwipeListView
       disableRightSwipe
       style={styles.list}
       data={feedList}
-      renderItem={({item}) => {
+      renderItem={({ item }) => {
         return (
           <View>
             <Divider />
@@ -39,21 +41,21 @@ const FeedList = ({feedList, setFeedList, changeFeedLink}) => {
           <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
             <TouchableOpacity
               onPress={() => deleteFeedItem(data, feedList, setFeedList)}
-              style={styles.backTextWhite}>
-              <Text>Delete</Text>
+              style={styles.backText}>
+              <Text style={{ color: '#fff' }}>Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
-      rightOpenValue={-75}
+      rightOpenValue={-100}
       keyExtractor={(_item, index) => index.toString()}
     />
   );
 };
 
-const styles = StyleSheet.create({
+const lightStylesProto = {
   btn: {
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     borderRadius: 0,
   },
   list: {
@@ -65,23 +67,49 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 75,
+    width: 100,
   },
   backRightBtnRight: {
-    backgroundColor: 'red',
+    backgroundColor: '#d33',
     right: 0,
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: '#d33',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingLeft: 15,
   },
-  backTextWhite: {
-    color: '#FFF',
+  backText: {
+    color: '#fff',
   },
-});
+};
+
+const darkStylesProto = {
+  btn: {
+    backgroundColor: '#222b44',
+    borderRadius: 0,
+  },
+  backRightBtnRight: {
+    backgroundColor: '#f00',
+    right: 0,
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#f00',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+  },
+  backText: {
+    color: '#000',
+  },
+};
+
+const lightStyles = StyleSheet.create(lightStylesProto);
+const darkStyles = StyleSheet.flatten([lightStyles, StyleSheet.create(darkStylesProto)]);
+
 
 export default FeedList;
