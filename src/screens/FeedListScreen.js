@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, KeyboardAvoidingView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import BottomNavBar from '../components/BottomNavBar';
 import {
@@ -19,7 +19,7 @@ import Toast from 'react-native-tiny-toast';
 import MySafeAreaView from '../components/MySafeAreaView';
 import ThemeSelector from '../services/ThemeSelector';
 
-const FeedListScreen = ({navigation}) => {
+const FeedListScreen = ({ navigation }) => {
   const [feedList, setFeedList] = useState([]);
   const [visibleModal, setVisibleModal] = React.useState(false);
 
@@ -36,29 +36,44 @@ const FeedListScreen = ({navigation}) => {
     }
   }
 
-  const save = async (value) => {
+  const save = async (value, index) => {
     if (!Validator.validURL(value.link)) {
       return;
     }
+    console.log('save', index);
+
+    let updateList = (lst, itm, idx) => {
+      console.log('updateList', idx, lst, itm);
+      if (idx === -1) {
+        return [...lst, itm];
+      } else { 
+        let newList = [...lst];
+        newList[idx] = itm;
+        return newList;
+      }
+    };
 
     try {
-      let jsonValue = JSON.stringify([...feedList, value]);
+      let jsonValue = JSON.stringify(updateList(feedList, value, index));
       await AsyncStorage.setItem('FeedList', jsonValue);
     } catch (e) {
       console.log('Error: ' + e);
     }
-    setFeedList((oldArray) => [...oldArray, value]);
+    setFeedList((oldArray) => updateList(oldArray, value, index));
     setVisibleModal(false);
   };
 
-  const BackAction = () => (
+  const AddAction = () => (
     <TopNavigationAction
-      icon={BackIcon}
-      onPress={() => setVisibleModal(true)}
+      icon={AddIcon}
+      onPress={() => {
+        addEditModalLoad('', '', 'Add Feed', -1);
+        setVisibleModal(true);
+      }}
     />
   );
 
-  const BackIcon = (props) => <Icon {...props} name="plus-outline" />;
+  const AddIcon = (props) => <Icon {...props} name="plus-outline" />;
 
   const DeleteItemFromFeed = (indexToDelete) => {
     setFeedList(() => feedList.filter((_x, index) => index != indexToDelete));
@@ -74,34 +89,49 @@ const FeedListScreen = ({navigation}) => {
     });
   };
 
+  let addEditModalLoad;
+  const addEditModal =
+    <>
+      <FeedListModal
+        visible={visibleModal}
+        onBackdropPress={() => setVisibleModal(false)}
+        save={save}
+        updateFunc={l => { addEditModalLoad = l; }}
+      />
+    </>;
+
+  const editItem = (indexToEdit) => {
+    let item = feedList[indexToEdit];
+    console.log('To edit', item);
+    addEditModalLoad(item.name, item.link, 'Save Feed', indexToEdit);
+    setVisibleModal(true);
+  };
+
 
   const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
   return (
-    <Layout style={{flex: 1}}>
+    <Layout style={{ flex: 1 }}>
       <MySafeAreaView style={styles.description}>
         <TopNavigation
           title="FeedList"
           alignment="center"
-          accessoryRight={BackAction}
+          accessoryRight={AddAction}
         />
         <KeyboardAvoidingView behavior={'height'} style={styles.innerContainer}>
-          <FeedListModal
-            visible={visibleModal}
-            onBackdropPress={() => setVisibleModal(false)}
-            save={save}
-          />
+          {addEditModal}
           {feedList?.length == 0 ? (
             <EmptyPlaceholder
               firstText="Empty feed list"
               secondText="You can enter a feed link with the button above"
             />
           ) : (
-            <FeedList
-              feedList={feedList}
-              setFeedList={DeleteItemFromFeed}
-              changeFeedLink={changeFeedLink}
-            />
-          )}
+              <FeedList
+                feedList={feedList}
+                setFeedList={DeleteItemFromFeed}
+                changeFeedLink={changeFeedLink}
+                editItem={editItem}
+              />
+            )}
         </KeyboardAvoidingView>
         <BottomNavBar
           index={0}

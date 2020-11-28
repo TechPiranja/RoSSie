@@ -1,5 +1,5 @@
-import {Button, Card, Text} from '@ui-kitten/components';
-import React, {useState} from 'react';
+import { Button, Card, Text } from '@ui-kitten/components';
+import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -8,19 +8,32 @@ import {
   View,
   Platform,
 } from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-gesture-handler';
 
-const FeedListModal = ({visible, onBackdropPress, save}) => {
+let feedIndex = -1;
+
+const FeedListModal = ({ visible, onBackdropPress, save, updateFunc }) => {
   const [FeedLink, setFeedLink] = useState('');
   const [FeedName, setFeedName] = useState('');
+  const [saveTitle, setSaveTitle] = useState('');
 
   const saveInput = () => {
     let feedItem = {
       name: FeedName,
       link: FeedLink,
     };
-    save(feedItem);
+    save(feedItem, feedIndex);
   };
+
+  const load = (name, link, saveTitle, index) => {
+    setFeedLink(link);
+    setFeedName(name);
+    setSaveTitle(saveTitle);
+    feedIndex = index;
+    console.log('modal loaded', name, link, saveTitle, index);
+  }
+
+  updateFunc(load);
 
   return (
     <Modal
@@ -54,7 +67,7 @@ const FeedListModal = ({visible, onBackdropPress, save}) => {
                 appearance="ghost"
                 style={styles.buttons}
                 onPress={() => saveInput()}>
-                Add Feed
+                {saveTitle}
               </Button>
             </Card>
           </View>
