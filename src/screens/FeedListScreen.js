@@ -63,8 +63,9 @@ const FeedListScreen = ({navigation}) => {
     setFeedList(() => feedList.filter((_x, index) => index != indexToDelete));
   };
 
-  const changeFeedLink = (item) => {
-    FeedFetcher.changeFeedLink(item);
+  const changeFeedLink = (item, name) => {
+    console.log('Changing to', item, 'with name:', name);
+    FeedFetcher.changeFeedLink(item, name);
     navigation.navigate('Feed');
     Toast.showSuccess('Changed current Feedlink!', {
       position: Toast.position.CENTER,

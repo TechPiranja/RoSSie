@@ -23,6 +23,7 @@ import EmptyPlaceholder from '../components/EmptyPlaceholder';
 const FeedScreen = ({navigation}) => {
   const [feed, setFeed] = useState([]);
   const [loadedFeedLink, setLoadedFeedLink] = useState('');
+  const [loadedFeedName, setLoadedFeedName] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [fetching, setFetching] = useState(false);
   const isFocused = useIsFocused();
@@ -42,11 +43,13 @@ const FeedScreen = ({navigation}) => {
       if (currentLink == '' || currentLink == null) {
         setFeed([]);
         setLoadedFeedLink(null);
+        setLoadedFeedName('Feed'); // Default Name
       } else if (!Validator.validURL(currentLink)) {
         return;
       } else if (loadedFeedLink !== currentLink) {
         load();
         setLoadedFeedLink(currentLink);
+        setLoadedFeedName(await FeedFetcher.getCurrentFeedName());
       }
     }
     hasFeedLinkChanged();
@@ -95,7 +98,7 @@ const FeedScreen = ({navigation}) => {
 
   return (
     <MySafeAreaView>
-      <TopNavigation title="Feed" alignment="center" />
+      <TopNavigation title={loadedFeedName} alignment="center" />
       {feed?.length == 0 ? (
         fetching ? (
           <Layout style={styles.centered}>
@@ -117,7 +120,9 @@ const FeedScreen = ({navigation}) => {
           }
           data={feed}
           renderItem={({item}) => {
-            return <FeedOverview result={item} navigation={navigation} />;
+            let result = JSON.parse(JSON.stringify(item)); // Create copy
+            result.feedName = loadedFeedName;
+            return <FeedOverview result={result} navigation={navigation} />;
           }}
           keyExtractor={(_item, index) => index.toString()}
         />

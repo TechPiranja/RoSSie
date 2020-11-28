@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const FeedOverview = ({result, navigation}) => {
+const FeedOverview = ({ result, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('FeedDetail', {result: result})}>
+        onPress={() => navigation.navigate('FeedDetail', { result: result })}>
         <Text>{result.title}</Text>
-        <Text style={styles.time}>Time: {result.time} </Text>
+        {result.time ? <Text style={styles.time}>Time: {result.time} </Text> : null}
       </TouchableOpacity>
     </View>
   );
