@@ -23,7 +23,7 @@ import EmptyPlaceholder from '../components/EmptyPlaceholder';
 const FeedScreen = ({navigation}) => {
   const [feed, setFeed] = useState([]);
   const [loadedFeedLink, setLoadedFeedLink] = useState('');
-  const [loadedFeedName, setLoadedFeedName] = useState('');
+  const [loadedFeedName, setLoadedFeedName] = useState('Feed');
   const [refreshing, setRefreshing] = useState(false);
   const [fetching, setFetching] = useState(false);
   const isFocused = useIsFocused();
@@ -38,18 +38,22 @@ const FeedScreen = ({navigation}) => {
   useEffect(() => {
     async function hasFeedLinkChanged() {
       let currentLink = await FeedFetcher.getCurrentFeedLink();
-      console.log(currentLink);
-      console.log(loadedFeedLink);
+      let currentName = await FeedFetcher.getCurrentFeedName();
+      console.log('Loaded Feed Name: ' + loadedFeedName);
+
       if (currentLink == '' || currentLink == null) {
         setFeed([]);
         setLoadedFeedLink(null);
-        setLoadedFeedName('Feed'); // Default Name
+        setLoadedFeedName('Feed');
       } else if (!Validator.validURL(currentLink)) {
         return;
-      } else if (loadedFeedLink !== currentLink) {
+      } else if (
+        loadedFeedLink !== currentLink ||
+        currentName !== loadedFeedName
+      ) {
         load();
         setLoadedFeedLink(currentLink);
-        setLoadedFeedName(await FeedFetcher.getCurrentFeedName());
+        setLoadedFeedName(currentName);
       }
     }
     hasFeedLinkChanged();
