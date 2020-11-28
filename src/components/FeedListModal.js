@@ -26,8 +26,10 @@ const FeedListModal = ({ visible, onBackdropPress, save, updateFunc }) => {
   };
 
   const load = (name, link, saveTitle, index) => {
-    setFeedLink(link);
-    setFeedName(name);
+    if (index !== feedIndex || index !== -1) {
+      setFeedLink(link);
+      setFeedName(name);
+    }
     setSaveTitle(saveTitle);
     feedIndex = index;
     console.log('modal loaded', name, link, saveTitle, index);
