@@ -1,13 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Linking } from 'react-native';
-import { ScrollView, Dimensions } from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Linking} from 'react-native';
+import {ScrollView, Dimensions} from 'react-native';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/Feather';
-import MySafeAreaView from './MySafeAreaView';
-import { TopNavigation } from '@ui-kitten/components';
 import ThemeSelector from '../services/ThemeSelector';
 
-const FeedDetail = ({ result }) => {
+const FeedDetail = ({result}) => {
   const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
   const htmlStyles = ThemeSelector.getDarkModeEnabled() ? darkHTMLStyles : lightHTMLStyles;
 

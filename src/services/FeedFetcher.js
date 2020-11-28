@@ -11,7 +11,7 @@ class FeedFetcher {
   getCurrentFeedName = async () => {
     let currentFeedName = await AsyncStorage.getItem('CurrentFeedName');
     return JSON.parse(currentFeedName);
-  }
+  };
 
   fetchData = async () => {
     let currentFeedLink = await this.getCurrentFeedLink();
