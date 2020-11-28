@@ -166,6 +166,9 @@ const darkStylesProto = {
 };
 
 const lightStyles = StyleSheet.create(lightStylesProto);
-const darkStyles = StyleSheet.flatten([lightStyles, StyleSheet.create(darkStylesProto)]);
+const darkStyles = StyleSheet.flatten([
+  lightStyles,
+  StyleSheet.create(darkStylesProto),
+]);
 
 export default FeedScreen;
