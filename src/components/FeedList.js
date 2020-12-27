@@ -1,12 +1,13 @@
 import { Divider, Button } from '@ui-kitten/components';
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
+import Animated, { Easing } from 'react-native-reanimated';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import FeedFetcher from '../services/FeedFetcher';
 import ThemeSelector from '../services/ThemeSelector';
 
-const deleteFeedItem = async (data, feedList, setFeedList) => {
-  let indexToDelete = feedList.indexOf(data.item);
+const deleteFeedItemIndex = async (indexToDelete, feedList, setFeedList) => {
   setFeedList(indexToDelete);
   FeedFetcher.save(
     'FeedList',
@@ -15,6 +16,10 @@ const deleteFeedItem = async (data, feedList, setFeedList) => {
   let link = await FeedFetcher.getCurrentFeedLink();
   await FeedFetcher.removeFeed(link);
 };
+const deleteFeedItem = async (data, feedList, setFeedList) => {
+  let indexToDelete = feedList.indexOf(data.item);
+  await deleteFeedItemIndex(indexToDelete, feedList, setFeedList);
+};
 
 const editFeedItem = async (data, feedList, editItem) => {
   let indexToEdit = feedList.indexOf(data.item);
@@ -22,7 +27,12 @@ const editFeedItem = async (data, feedList, editItem) => {
 };
 
 const FeedList = ({ feedList, setFeedList, changeFeedLink, editItem }) => {
+  const [deleteWidth, setDeleteWidth] = useState(new Animated.Value(100));
+
   const styles = ThemeSelector.getDarkModeEnabled() ? darkStyles : lightStyles;
+  const deleteAnimatedStyle = {
+    width: deleteWidth,
+  };
   return (
     <SwipeListView
       disableRightSwipe
@@ -50,18 +60,39 @@ const FeedList = ({ feedList, setFeedList, changeFeedLink, editItem }) => {
               <Text style={styles.backRightBtnLeftText}>Edit</Text>
             </TouchableOpacity>
           </View>
-          <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+          <Animated.View style={[styles.backRightBtn, styles.backRightBtnRight, deleteAnimatedStyle]}>
             <TouchableOpacity
               onPress={() => deleteFeedItem(data, feedList, setFeedList)}
               style={styles.backText}>
               <Text style={{ color: '#fff' }}>Delete</Text>
             </TouchableOpacity>
-          </View>
+          </Animated.View >
         </View>
       )}
       rightOpenValue={-175}
       keyExtractor={(_item, index) => index.toString()}
       swipeToOpenVelocityContribution={5}
+      rightActivationValue={-300}
+      onRightActionStatusChange={({ isActivated }) => {
+        if (isActivated) {
+          Animated.timing(deleteWidth, {
+            toValue: Dimensions.get('window').width,
+            duration: 200,
+            easing: Easing.out(Easing.poly(4)),
+            delay: 0,
+          }).start();
+        } else {
+          Animated.timing(deleteWidth, {
+            toValue: 100,
+            duration: 200,
+            easing: Easing.out(Easing.poly(4)),
+            delay: 0,
+          }).start();
+        }
+      }}
+      onRightAction={(rowKey) => {
+        deleteFeedItemIndex(rowKey, feedList, setFeedList);
+      }}
     />
   );
 };
