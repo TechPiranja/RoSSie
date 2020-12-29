@@ -72,7 +72,7 @@ const FeedList = ({ feedList, setFeedList, changeFeedLink, editItem }) => {
       rightOpenValue={-175}
       keyExtractor={(_item, index) => index.toString()}
       swipeToOpenVelocityContribution={5}
-      rightActivationValue={-300}
+      rightActivationValue={-Dimensions.get('window').width * 0.75}
       onRightActionStatusChange={({ isActivated }) => {
         if (isActivated) {
           Animated.timing(deleteWidth, {
