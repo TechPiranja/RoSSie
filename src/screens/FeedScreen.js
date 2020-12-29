@@ -1,21 +1,22 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import MySafeAreaView from '../components/MySafeAreaView';
-import {RefreshControl, StyleSheet, Text} from 'react-native';
+import { RefreshControl, StyleSheet, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {FlatList} from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import FeedOverview from '../components/FeedOverview';
 import BottomNavBar from '../components/BottomNavBar';
 import FeedFetcher from '../services/FeedFetcher';
-import {useIsFocused} from '@react-navigation/native';
-import {TopNavigation, Layout, Spinner} from '@ui-kitten/components';
+import { useIsFocused } from '@react-navigation/native';
+import { TopNavigation, Layout, Spinner } from '@ui-kitten/components';
 import Validator from '../services/Validation';
 import EmptyPlaceholder from '../components/EmptyPlaceholder';
 import ThemeSelector from '../services/ThemeSelector';
+import Utils from '../services/utils';
 
-const FeedScreen = ({navigation}) => {
+const FeedScreen = ({ navigation }) => {
   const [feed, setFeed] = useState([]);
   const [loadedFeedLink, setLoadedFeedLink] = useState('');
   const [loadedFeedName, setLoadedFeedName] = useState('Feed');
@@ -108,34 +109,44 @@ const FeedScreen = ({navigation}) => {
         fetching ? (
           <Layout style={styles.centered}>
             <Spinner size="giant" />
-            <Text style={{color: '#999', margin: 10}}>Loading</Text>
+            <Text style={{ color: '#999', margin: 10 }}>Loading</Text>
           </Layout>
         ) : (
-          <Layout style={styles.centered}>
-            <EmptyPlaceholder
-              firstText="No feed link provided"
-              secondText="Please add a link inside the FeedList Menu"
-            />
-          </Layout>
-        )
-      ) : (
-        <FlatList
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
-          }
-          data={feed}
-          renderItem={({item}) => {
-            return (
-              <FeedOverview
-                result={item}
-                navigation={navigation}
-                saveIsRead={saveIsRead}
+            <Layout style={styles.centered}>
+              <EmptyPlaceholder
+                firstText="No feed link provided"
+                secondText="Please add a link inside the FeedList Menu"
               />
-            );
-          }}
-          keyExtractor={(_item, index) => index.toString()}
-        />
-      )}
+            </Layout>
+          )
+      ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+            }
+            data={Utils.groupByToList(feed, itm => itm.time ? new Date(itm.time).toDateString() : '')}
+            renderItem={({ item }) => {
+              let lst = [];
+              if (item.key) {
+                lst.push(
+                  <Text style={styles.groupByText}>
+                    {(new Date(item.key)).toDateString()}
+                  </Text>
+                );
+              }
+              item.values.forEach(itm => {
+                lst.push(
+                  <FeedOverview
+                    result={itm}
+                    navigation={navigation}
+                    saveIsRead={saveIsRead}
+                  />);
+              });
+              return lst;
+            }}
+            keyExtractor={(_item, index) => index.toString()}
+          />
+        )}
       <BottomNavBar index={1} navigation={navigation} />
     </MySafeAreaView>
   );
@@ -154,6 +165,12 @@ const lightStylesProto = {
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
+  groupByText: {
+    marginLeft: 10,
+    marginTop: 25,
+    fontSize: 22,
+    color: '#777',
+  },
 };
 const darkStylesProto = {
   centered: {
@@ -162,6 +179,12 @@ const darkStylesProto = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#222b44',
+  },
+  groupByText: {
+    marginLeft: 10,
+    marginTop: 25,
+    fontSize: 22,
+    color: '#aaa',
   },
 };
 
