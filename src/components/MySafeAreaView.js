@@ -3,8 +3,10 @@ import {Layout} from '@ui-kitten/components';
 import React from 'react';
 import {Platform, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import ThemeSelector from '../services/ThemeSelector';
 
 const MySafeAreaView = ({children}) => {
+  const statusBarColor = ThemeSelector.getDarkModeEnabled() ? 'light-content' : 'dark-content';
   if (Platform.OS === 'ios') {
     return (
       <Layout style={{flex: 1}}>
@@ -14,7 +16,7 @@ const MySafeAreaView = ({children}) => {
             flexDirection: 'column',
           }}>
           <>
-            <StatusBar barStyle="dark-content" translucent />
+            <StatusBar barStyle={statusBarColor} translucent />
             {children}
           </>
         </SafeAreaView>
@@ -26,7 +28,7 @@ const MySafeAreaView = ({children}) => {
       <Layout style={{flex: 1, paddingTop: StatusBar.currentHeight}}>
         <StatusBar
           translucent
-          barStyle="dark-content"
+          barStyle={statusBarColor}
           backgroundColor="rgba(0, 0, 0, 0.251)"
         />
         {children}
