@@ -52,7 +52,7 @@ class FeedFetcher {
       return;
     }
     let filteredKeys = keys.filter((x) =>
-      feedLinks.some((link) => x.includes(link)),
+      feedLinks.some((linkObj) => x.includes(linkObj.link))
     );
     await AsyncStorage.multiRemove(filteredKeys);
   };
@@ -100,6 +100,13 @@ class FeedFetcher {
         };
         rssData.push(x);
       });
+    });
+
+    rssData.forEach(obj => {
+      let original = feed.find(e => e.title === obj.title);
+      if(typeof(original) !== 'undefined' && typeof(original.isRead) === 'boolean') {
+        obj.isRead = original.isRead;
+      }
     });
 
     console.log(rssData.length + ' and ' + feed.length);
